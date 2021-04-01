@@ -3,12 +3,12 @@ import 'dart:collection';
 import '../../widgets/widgets.dart';
 import '../../classes/classes.dart';
 
-class PrivateChat extends StatefulWidget {
+class GroupChat extends StatefulWidget {
   @override
-  _PrivateChat createState() => _PrivateChat();
+  _GroupChat createState() => _GroupChat();
   
 }
-class _PrivateChat extends State<PrivateChat> {
+class _GroupChat extends State<GroupChat> {
   TextEditingController messageController = new TextEditingController();
   ListQueue <Rant> rants = ListQueue();
   Chat chatContext = Chat(ListQueue.from([
@@ -48,7 +48,7 @@ class _PrivateChat extends State<PrivateChat> {
     return ReuseChat(
       rants: rants,
       chatContext: chatContext,
-      isPM: true,
+      isPM: false,
     );
   }
 }

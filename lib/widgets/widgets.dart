@@ -2,4 +2,4 @@
 //located in the custom_widgets folder
 
 export 'custom_widgets/Rant.dart';
-export 'custom_widgets/LeftRightMessage.dart';
+export 'custom_widgets/ReuseChat.dart';

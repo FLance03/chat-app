@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import '../../classes/classes.dart';
 
 class Rant extends StatelessWidget {
-  bool isSender;
+  bool isSender,isPM;
   MessageGroup chatHeads;
 
-  Rant({@required this.isSender, @required this.chatHeads});
+  Rant({@required this.isSender, @required this.chatHeads, @required this.isPM});
 
   Widget build(BuildContext context) {
     return Column(
@@ -22,7 +22,7 @@ class Rant extends StatelessWidget {
                     alignment: isSender ? Alignment.topRight : Alignment.topLeft,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
-                      children: ProduceMessages(),
+                      children: ProduceMessages(context),
                     ),
                   ),
                 ),
@@ -33,24 +33,52 @@ class Rant extends StatelessWidget {
       ],
     );
   }
-  List<Container> ProduceMessages() {
+  List<Container> ProduceMessages(BuildContext context) {
     List<Container> messageWidgets = [];
     double bubbleCircleSize = 10;
     int bubbleMarginSize = isSender ? 0 : 1;
     Color bubbleColor = isSender ? Colors.lightBlue[200] : Colors.grey[200];
     
+    if (!isPM && !isSender){
+      messageWidgets.add(
+        Container(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                flex: bubbleMarginSize,
+                child: SizedBox(
+                ),
+              ),
+              Expanded(
+                flex: 10 - bubbleMarginSize,
+                child: Container(
+                  margin: EdgeInsets.only(left: 10),
+                  child: Text(
+                    "Elon",
+                    style: TextStyle(
+                      fontStyle: FontStyle.italic,
+                      color: Colors.black.withOpacity(0.9),
+                      fontSize: DefaultTextStyle.of(context).style.fontSize * 0.9,
+                    ),
+                  )
+                ),
+              )
+            ],
+          ),
+        ),
+      );
+    }
     for (int i=0 ; i<chatHeads.messages.length ; i++){
       messageWidgets.add(
         Container(
-          padding: EdgeInsets.only(left: 3),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               isSender ? SizedBox() : Expanded(
                 flex: bubbleMarginSize,
                 child: SizedBox(
-                  width: 15,
-                  child: i!=chatHeads.messages.length-1 ? Container() : Container(
+                  child: i!=chatHeads.messages.length-1 ? SizedBox() : Container(
                     child: CircleAvatar(
                       radius: 20,
                       child: ClipOval(
@@ -87,7 +115,7 @@ class Rant extends StatelessWidget {
       );
     }
     if (chatHeads.messages.length > 0){
-      messageWidgets.add(Container(height: 10,));
+      messageWidgets.add(Container(height: 10));
     }
     return messageWidgets;
   }

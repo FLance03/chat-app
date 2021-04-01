@@ -1,8 +1,9 @@
+import 'dart:collection';
 import 'package:flutter/material.dart';
 import '../classes.dart';
 
 class Chat {
-  List<MessageGroup> messageGroups;
+  ListQueue<MessageGroup> messageGroups;
 
   Chat(this.messageGroups);
 

@@ -2,4 +2,5 @@
 //in the user_screens folder
 
 export 'user_screens/PrivateChat.dart';
+export 'user_screens/GroupChat.dart';
 
