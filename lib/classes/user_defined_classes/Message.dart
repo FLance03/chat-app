@@ -1,6 +1,10 @@
+import 'package:flutter/material.dart';
+import '../classes.dart';
+
 class Message {
-  String senderName, senderId, chatId, message;
+  String message;
+  User sender;
   var date_created;
   
-  Message(this.message);
+  Message({this.sender, this.message});
 }

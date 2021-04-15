@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'screens/screens.dart';
+import './classes/classes.dart';
 
 //Screens as String Variables
 const TestRoute = '/';
@@ -18,6 +19,8 @@ const AnnouncementDetails = '/AnnouncementDetails';
 
 
 Future main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
     onGenerateRoute: _routes(), //default routes is '/' which is LoginPage()

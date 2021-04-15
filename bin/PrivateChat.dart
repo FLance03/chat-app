@@ -102,9 +102,41 @@ class _PrivateChat extends State<PrivateChat> {
               isPM: true,
               name: data['name'],
             ),
-            body: ReuseChat(
-              chatId: 'w8RTtLLQM93tZ6PxyVLH',
-              isPM: true,
+            body: StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                      .collection('messages')
+                      .where('chat_id', isEqualTo: 'w8RTtLLQM93tZ6PxyVLH')
+                      .orderBy('date_created', descending: true)
+                      .snapshots(),
+              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.hasError) {
+                  return Text(snapshot.error.toString());
+                }
+
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Text("Loading");
+                }
+                List<Message> messages = [];
+                snapshot.data.docs.map((doc) => messages.add(
+                  Message(
+                    sender: User(
+                      senderId: doc['sender_id'],
+                      senderName: doc['sender_name'],
+                    ),
+                    message: doc['content'],
+                  )
+                ));
+                if (mounted){
+                  setState(() {
+                    chatContext.add(Chat.makeMessageGroup(messages));
+                  });
+                }
+                return ReuseChat(
+                  rants: rants,
+                  chatContext: chatContext,
+                  isPM: true,
+                );
+              }
             ),
             endDrawer: ChatEndDrawer(),
           );
