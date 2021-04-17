@@ -6,10 +6,4 @@ class UserList {
   
   UserList({this.userList});
 
-  List<User> findUser(String text, int maxCount) {
-    List<User> retVal;
-
-    retVal = userList.where((e) => e.senderName.toLowerCase().contains(text.toLowerCase()));
-    return List();
-  }
 }

@@ -6,6 +6,6 @@ import 'package:flutter/material.dart';
 // }
 
 typedef BubbleInterfaceHandle<T> = bool Function(String isNextSenderId);
-typedef LastBubbleHandle<T> = void Function({@required BubbleInterfaceHandle bubleInterfaceHandle});
+typedef LastBubbleHandle<T> = void Function({@required BubbleInterfaceHandle bubbleInterfaceHandle});
 typedef GetLastBubbleInterfaceHandle<T> = BubbleInterfaceHandle Function();
 

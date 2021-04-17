@@ -6,6 +6,19 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PrivateChat extends StatefulWidget {
+  User user = User(
+    id: "Tzt9xxCF3it4dCzvby40",
+    name: "Alice",
+  );
+  
+  Chat chat = Chat(
+    id: 'w8RTtLLQM93tZ6PxyVLH',
+    isPM: true,
+    members: [
+      'Tzt9xxCF3it4dCzvby40', 
+      'Su80LbnaD0Szia4Yh7QM',
+    ],
+  );
   @override
   _PrivateChat createState() => _PrivateChat();
   
@@ -85,31 +98,43 @@ class _PrivateChat extends State<PrivateChat> {
 
     return FutureBuilder(
       future: FirebaseFirestore.instance
-              .collection("users")
+              .collection("chats")
               .doc("Tzt9xxCF3it4dCzvby40")
               .get(),
-      builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+      builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshotChat) {
 
-        if (snapshot.hasError) {
-          return Text(snapshot.error.toString());
+        if (snapshotChat.hasError) {
+          return Text(snapshotChat.error.toString());
         }
 
-        if (snapshot.connectionState == ConnectionState.done) {
-          Map<String, dynamic> data = snapshot.data.data();
-          return Scaffold(
-            appBar: ChatAppBar(
-              originalGroupName: 'Test',
-              isPM: true,
-              name: data['name'],
-            ),
-            body: ReuseChat(
-              chatId: 'w8RTtLLQM93tZ6PxyVLH',
-              isPM: true,
-            ),
-            endDrawer: ChatEndDrawer(),
+        if (snapshotChat.connectionState == ConnectionState.done) {
+          Map<String, dynamic> data = snapshotChat.data.data();
+          String otherUserId;
+          otherUserId = data['members'][0]==this.widget.user.id ? data['members'][1] : data['members'][0];
+          return FutureBuilder(
+            future: FirebaseFirestore.instance
+                    .collection("users")
+                    .doc(otherUserId)
+                    .get(),
+            builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshotUser) {
+              if (snapshotUser.hasError) {
+                return Text(snapshotUser.error.toString());
+              }
+              if (snapshotUser.connectionState == ConnectionState.done) {
+                return Scaffold(
+                  appBar: ChatAppBar(
+                    chat: this.widget.chat,
+                    user: this.widget.user,
+                  ),
+                  body: ReuseChat(
+                    chat: this.widget.chat,
+                  ),
+                );
+              }
+              return Text("loading");
+            }
           );
         }
-
         return Text("loading");
       },
       // builder: (context, snapshot) {

@@ -5,11 +5,9 @@ import '../../classes/classes.dart';
 
 
 class ReuseChat extends StatefulWidget {
-  String chatId;
-  bool isPM;
-  BubbleInterfaceHandle bubbleInterfaceHandle;
+  Chat chat;
 
-  ReuseChat({@required this.chatId, @required this.isPM});
+  ReuseChat({@required this.chat});
 
   @override
   _ReuseChat createState() => _ReuseChat();
@@ -17,16 +15,17 @@ class ReuseChat extends StatefulWidget {
 }
 class _ReuseChat extends State<ReuseChat> {
   TextEditingController messageController = new TextEditingController();
+  BubbleInterfaceHandle bubbleInterfaceHandle;
   Chat chatContext;
 
-  void lastBubbleHandle({@required BubbleInterfaceHandle bubleInterfaceHandle}){
-    print("Halo --__--");
-    print(bubleInterfaceHandle);
-    this.widget.bubbleInterfaceHandle = bubleInterfaceHandle;
-    print(this.widget.bubbleInterfaceHandle);
+  void lastBubbleHandle({@required BubbleInterfaceHandle bubbleInterfaceHandle}){
+    // print("Halo --__--");
+    // print(bubleInterfaceHandle);
+    this.bubbleInterfaceHandle = bubbleInterfaceHandle;
+    // print(this.widget.bubbleInterfaceHandle);
   }
   BubbleInterfaceHandle getLastBubbleInterfaceHandle() {
-    return this.widget.bubbleInterfaceHandle;
+    return this.bubbleInterfaceHandle;
   }
   Widget build(BuildContext context) {
     return Column(
@@ -39,11 +38,11 @@ class _ReuseChat extends State<ReuseChat> {
               child: StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
                         .collection('messages')
-                        .where('chat_id', isEqualTo: this.widget.chatId)
+                        .where('chat_id', isEqualTo: this.widget.chat.id)
                         .orderBy('date_created')
                         .snapshots(),
                 builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-    print(this.widget.bubbleInterfaceHandle);
+    // print(this.widget.bubbleInterfaceHandle);
                   if (snapshot.hasError) {
                     return Text(snapshot.error.toString());
                   }
@@ -68,9 +67,13 @@ class _ReuseChat extends State<ReuseChat> {
                   return Column(
                     children: snapshot.data.docs.map(
                       (doc) {
+                        User sender = User(
+                          id: doc.data()['sender_id'],
+                          name: doc.data()['sender_name'],
+                        );
                         return Bubble(
-                          senderId: doc.data()['sender_id'],
-                          isPM: true,
+                          sender: sender,
+                          isPM: this.widget.chat.isPM,
                           message: doc.data()['content'],
                           lastBubbleHandle: lastBubbleHandle,
                           getLastBubbleInterfaceHandle: getLastBubbleInterfaceHandle,

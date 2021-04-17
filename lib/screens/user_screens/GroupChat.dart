@@ -4,6 +4,25 @@ import '../../widgets/widgets.dart';
 import '../../classes/classes.dart';
 
 class GroupChat extends StatefulWidget {
+  User user = User(
+    id: "Tzt9xxCF3it4dCzvby40",
+    name: "Alice",
+  );
+  
+  Group chat = Group(
+    id: 'w8RTtLLQM93tZ6PxyVLH',
+    name: 'The First Group',
+    isPM: false,
+    members: [
+      'Tzt9xxCF3it4dCzvby40', 
+      'Su80LbnaD0Szia4Yh7QM',
+    ],
+    admins: [
+      'Tzt9xxCF3it4dCzvby40',
+    ]
+  );
+
+  GroupChat({@required user});
   @override
   _GroupChat createState() => _GroupChat();
   
@@ -57,16 +76,47 @@ class _GroupChat extends State<GroupChat> {
   // ]));
 
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: ChatAppBar(
-        originalGroupName: 'Test',
-        isPM: false,
-      ),
-      body: ReuseChat(
-        chatId: 'w8RTtLLQM93tZ6PxyVLH',
-        isPM: false,
-      ),
-      endDrawer: ChatEndDrawer(),
+    return FutureBuilder(
+      future: FirebaseFirestore.instance
+              .collection("chats")
+              .doc("w8RTtLLQM93tZ6PxyVLH")
+              .get(),
+      builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+
+        if (snapshot.hasError) {
+          return Text(snapshot.error.toString());
+        }
+
+        if (snapshot.connectionState == ConnectionState.done) {
+          Map<String, dynamic> data = snapshot.data.data();
+          return Scaffold(
+            appBar: ChatAppBar(
+              chat: this.widget.chat,
+              user: this.widget.user,
+            ),
+            body: ReuseChat(
+              chat: this.widget.chat,
+            ),
+            endDrawer: ChatEndDrawer(
+              chat: this.widget.chat,
+              user: this.widget.user,
+            ),
+          );
+        }
+
+        return Text("loading");
+      },
     );
+    // return Scaffold(
+    //   appBar: ChatAppBar(
+    //     originalGroupName: 'Test',
+    //     isPM: false,
+    //   ),
+    //   body: ReuseChat(
+    //     chatId: 'w8RTtLLQM93tZ6PxyVLH',
+    //     isPM: false,
+    //   ),
+    //   endDrawer: ChatEndDrawer(),
+    // );
   }
 }

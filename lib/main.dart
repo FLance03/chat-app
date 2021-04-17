@@ -41,7 +41,7 @@ RouteFactory _routes() {
     Widget screen;
     switch (settings.name) {
       case TestRoute:
-        screen = PrivateChat();
+        screen = GroupChat();
         break;
       // case Login:
       //   screen = LoginPage();

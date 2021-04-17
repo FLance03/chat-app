@@ -3,10 +3,10 @@ import 'dart:collection';
 import '../../widgets/widgets.dart';
 import '../../classes/classes.dart';
 class ChatAppBar extends StatefulWidget with PreferredSizeWidget{
-  String originalGroupName,name;
-  bool isPM;
+  Chat chat;
+  User user;
 
-  ChatAppBar({@required this.originalGroupName, @required this.name, @required this.isPM});
+  ChatAppBar({@required this.chat, @required this.user});
 
   @override
   _ChatAppBar createState() => _ChatAppBar();
@@ -19,12 +19,12 @@ class _ChatAppBar extends State<ChatAppBar> {
 
   @override
   void initState() {
-    groupNameController = new TextEditingController(text: this.widget.originalGroupName);
+    groupNameController = new TextEditingController(text: this.widget.chat.getName(this.widget.user));
   }
   Widget build(BuildContext context){
     return AppBar(
       title: GestureDetector(
-        onTap: this.widget.isPM ? (){} : () {
+        onTap: this.widget.chat.isPM ? (){} : () {
           return showDialog<void>(
             context: context,
             barrierDismissible: true, 
@@ -55,7 +55,7 @@ class _ChatAppBar extends State<ChatAppBar> {
             }
           );
         },
-        child: Text(this.widget.name),
+        child: Text(this.widget.chat.getName(this.widget.user)),
       ),
       leading: CircleAvatar(
         radius: 15,

@@ -4,6 +4,10 @@ import '../../widgets/widgets.dart';
 import '../../classes/classes.dart';
 
 class ChatEndDrawer extends StatelessWidget {
+  Group chat;
+  User user;
+
+  ChatEndDrawer({@required this.chat, @required this.user});
   Widget build(BuildContext context){
     return Drawer(
       child: ListView(
@@ -19,7 +23,10 @@ class ChatEndDrawer extends StatelessWidget {
                 context: context,
                 barrierDismissible: true, 
                 builder: (BuildContext context) {
-                  return SearchAddUser();
+                  return SearchAddUser(
+                    chat: this.chat,
+                    user: this.user,
+                  );
                 }
               );
             },
