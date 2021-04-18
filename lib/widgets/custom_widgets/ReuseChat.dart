@@ -6,8 +6,9 @@ import '../../classes/classes.dart';
 
 class ReuseChat extends StatefulWidget {
   Chat chat;
+  User user;
 
-  ReuseChat({@required this.chat});
+  ReuseChat({@required this.chat, @required this.user});
 
   @override
   _ReuseChat createState() => _ReuseChat();
@@ -31,7 +32,6 @@ class _ReuseChat extends State<ReuseChat> {
     return Column(
       children: [
         Expanded(
-          flex: 9,
           child: SingleChildScrollView(
             padding: EdgeInsets.symmetric(vertical: 10),
             child: Container(
@@ -86,34 +86,41 @@ class _ReuseChat extends State<ReuseChat> {
             ),
           ),
         ),
-        Expanded(
-          flex: 1,
-          child: Container(
-            color: Colors.lightBlue,
-            padding: EdgeInsets.only(bottom: 3),
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: Icon(Icons.emoji_emotions_outlined),
-                ),
-                Expanded(
-                  flex: 8,
-                  child: TextField(
-                  controller: messageController,
-                    textAlign: TextAlign.left,
-                    decoration: InputDecoration(
-                      // border: InputBorder.none,
-                      hintText: 'Type a message...',
-                    ),
+        Container(
+          color: Colors.blue[100],
+          padding: EdgeInsets.only(bottom: 3),
+          child: Row(
+            children: [
+              Expanded(
+                flex: 1,
+                child: Icon(Icons.emoji_emotions_outlined),
+              ),
+              Expanded(
+                flex: 8,
+                child: TextField(
+                controller: messageController,
+                  textAlign: TextAlign.left,
+                  decoration: InputDecoration(
+                    // border: InputBorder.none,
+                    hintText: 'Type a message...',
                   ),
                 ),
-                Expanded(
-                  flex: 1,
+              ),
+              Expanded(
+                flex: 1,
+                child: GestureDetector(
+                  onTap: () {
+                    this.widget.chat.sendMessage(
+                      message: messageController.text,
+                      user: this.widget.user,
+                    );
+                    FocusScope.of(context).unfocus();
+                    messageController.text = '';
+                  },
                   child: Icon(Icons.send),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ],

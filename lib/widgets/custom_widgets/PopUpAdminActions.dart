@@ -10,6 +10,10 @@ class AdminAction {
 }
 
 class PopUpAdminActions extends StatelessWidget {
+  bool isAdmin;
+
+  PopUpAdminActions({@required this.isAdmin});
+
   Widget build (BuildContext context) {
     return PopupMenuButton<String>(
       onSelected: (String result) {
@@ -21,13 +25,12 @@ class PopUpAdminActions extends StatelessWidget {
         ManageChat.MakeAdmin();
       },
       itemBuilder: (BuildContext context) => [
-        PopupMenuItem<String>(
-          value: 'Admin',
-          child: Text('Make Admin'),
-        ),
-        PopupMenuItem<String>(
+        isAdmin ? PopupMenuItem<String>(
           value: 'User',
           child: Text('Make User'),
+        )       : PopupMenuItem<String>(
+          value: 'Admin',
+          child: Text('Make Admin'),
         ),
         PopupMenuItem<String>(
           value: 'Kick',
@@ -36,4 +39,5 @@ class PopUpAdminActions extends StatelessWidget {
       ],
     );
   }
+  
 }

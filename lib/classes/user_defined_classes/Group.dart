@@ -35,13 +35,34 @@ class Group extends Chat{
   void addUserToGroupChat({User user}) {
     FirebaseFirestore.instance
     .collection('chats')
-    .doc('${this.id}')
+    .doc(this.id)
     .update({
-      "members": FieldValue.arrayUnion([user.id])
+      "members": FieldValue.arrayUnion([{
+        "id": user.id,
+        "name": user.name,
+      }])
     }).then((result){
       members.add(user.id);
     }).catchError((e){
-      print(e);
+      print("$e");
+    });
+  }
+
+  Future<List<User>> getAdmins() {
+    return FirebaseFirestore.instance
+    .collection("chats")
+    .doc(this.id)
+    .get()
+    .then((DocumentSnapshot doc) {
+      List<Map<String,String>> admins = doc.data()['admins'];
+
+      return admins.map((admin) => User(
+        id: admin['id'],
+        name: admin['name'],
+      )).toList();
+    })
+    .catchError((e) {
+      print("$e");
     });
   }
 }

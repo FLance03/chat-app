@@ -96,6 +96,7 @@ class _GroupChat extends State<GroupChat> {
             ),
             body: ReuseChat(
               chat: this.widget.chat,
+              user: this.widget.user,
             ),
             endDrawer: ChatEndDrawer(
               chat: this.widget.chat,
