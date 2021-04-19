@@ -15,15 +15,62 @@ class ChatAppBar extends StatefulWidget with PreferredSizeWidget{
   
 }
 class _ChatAppBar extends State<ChatAppBar> {
-  TextEditingController groupNameController;
+  TextEditingController groupNameController = new TextEditingController();
 
-  @override
-  void initState() {
-    groupNameController = new TextEditingController(text: this.widget.chat.getName(this.widget.user));
-  }
   Widget build(BuildContext context){
     return AppBar(
-      title: GestureDetector(
+      title: this.widget.chat.isPM ? PrivateChatName() : OnClickGroupName(),
+      leading: CircleAvatar(
+        radius: 15,
+        child: ClipOval(
+          child: Image.asset('assets/noodles.PNG'),
+        ),
+      ),
+      leadingWidth: 40,
+      actions: [
+        this.widget.chat.isPM ? SizedBox() : Builder(
+          builder: (context) => Padding(
+            padding: EdgeInsets.only(right: 10),
+            child: IconButton(
+              icon: Icon(Icons.group),
+              onPressed: () => Scaffold.of(context).openEndDrawer(),
+              tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+  Widget PrivateChatName() {
+    Private private = this.widget.chat;
+    return Text(private.getName());
+  }
+  Widget GroupChatName() {
+    Group group = this.widget.chat;
+    return StreamBuilder(
+      stream: group.getName(),
+      builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+        if (snapshot.hasError) {
+          return Text(snapshot.error.toString());
+        }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Text("Loading Group Name...");
+        }
+        if (!snapshot.hasData){
+          return Text("Loading Group Name...");
+        }
+        this.groupNameController.text = snapshot.data;
+        return Text(snapshot.data);
+      }
+    );
+  }
+  Widget OnClickGroupName() {
+    Group group = this.widget.chat;
+    return group.StreamAdminDependency(
+      user: this.widget.user,
+      waiting: Text("Loading Group Name..."),
+      outputNegative: GroupChatName(),
+      outputPositive: GestureDetector(
         onTap: this.widget.chat.isPM ? (){} : () {
           return showDialog<void>(
             context: context,
@@ -46,6 +93,10 @@ class _ChatAppBar extends State<ChatAppBar> {
                     child: Text('Change'),
                     onPressed: () {
                       if (groupNameController.text != ''){
+                        Group group = this.widget.chat;
+                        group.updateGroupName(
+                          name: groupNameController.text,
+                        );
                         Navigator.of(context).pop();
                       }
                     },
@@ -55,27 +106,8 @@ class _ChatAppBar extends State<ChatAppBar> {
             }
           );
         },
-        child: Text(this.widget.chat.getName(this.widget.user)),
+        child: GroupChatName(),
       ),
-      leading: CircleAvatar(
-        radius: 15,
-        child: ClipOval(
-          child: Image.asset('assets/noodles.PNG'),
-        ),
-      ),
-      leadingWidth: 40,
-      actions: [
-        Builder(
-          builder: (context) => Padding(
-            padding: EdgeInsets.only(right: 10),
-            child: IconButton(
-              icon: Icon(Icons.group),
-              onPressed: () => Scaffold.of(context).openEndDrawer(),
-              tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

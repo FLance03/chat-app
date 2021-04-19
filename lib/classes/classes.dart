@@ -5,6 +5,7 @@ export 'user_defined_classes/User.dart';
 export 'user_defined_classes/UserList.dart';
 export 'user_defined_classes/Message.dart';
 export 'user_defined_classes/Chat.dart';
+export 'user_defined_classes/Private.dart';
 export 'user_defined_classes/Group.dart';
 export 'user_defined_classes/MessageGroup.dart';
 export 'user_defined_classes/ManageChat.dart';

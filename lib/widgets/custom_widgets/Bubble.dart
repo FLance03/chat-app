@@ -5,21 +5,22 @@ import '../../classes/classes.dart';
 
 
 class Bubble extends StatefulWidget {
-  User sender;
+  User sender, user;
   bool isPM;
   GetLastBubbleInterfaceHandle getLastBubbleInterfaceHandle;
   LastBubbleHandle lastBubbleHandle;
   String message;
 
-  Bubble({@required sender, @required isPM, @required message, @required lastBubbleHandle, getLastBubbleInterfaceHandle}){
+  Bubble({@required sender, @required user, @required isPM, @required message, @required lastBubbleHandle, getLastBubbleInterfaceHandle}){
     this.sender = sender;
+    this.user = user;
     this.isPM = isPM;
     this.message = message;
     this.lastBubbleHandle = lastBubbleHandle;
     this.getLastBubbleInterfaceHandle = getLastBubbleInterfaceHandle;
   }
   bool isSender(String senderId) {
-    return senderId == 'Tzt9xxCF3it4dCzvby40';
+    return senderId == this.user.id;
   }
   @override
   _Bubble createState() => _Bubble();
@@ -33,7 +34,7 @@ class _Bubble extends State<Bubble> {
   bool newbubbleInterfaceHandle(String isNextSenderId) {
     // print("Halo :))");
     //   print("first:${this.widget.message}");
-    if (this.widget.sender.id == isNextSenderId){
+    if (this.widget.sender.id==isNextSenderId && mounted){
       // print("Halo :((");
       // print("second:${this.widget.message}");
       // print("dsadads${this.widget.sender.id} -- ${isNextSenderId}");
@@ -83,7 +84,6 @@ class _Bubble extends State<Bubble> {
     // return ConstrainedBox(
     //   constraints: BoxConstraints(maxWidth: 225),
     //   child: 
-    // print("HEREEEEEEEEE");
     return Align(
         alignment: this.widget.isSender(this.widget.sender.id) ? Alignment.topRight : Alignment.topLeft,
         child: Container(

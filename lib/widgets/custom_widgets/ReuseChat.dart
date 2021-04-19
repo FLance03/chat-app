@@ -4,20 +4,21 @@ import '../../widgets/widgets.dart';
 import '../../classes/classes.dart';
 
 
-class ReuseChat extends StatefulWidget {
+
+class ReuseChat extends StatelessWidget {
   Chat chat;
   User user;
 
   ReuseChat({@required this.chat, @required this.user});
-
-  @override
-  _ReuseChat createState() => _ReuseChat();
-  
-}
-class _ReuseChat extends State<ReuseChat> {
-  TextEditingController messageController = new TextEditingController();
+  // FocusNode focus;
   BubbleInterfaceHandle bubbleInterfaceHandle;
-  Chat chatContext;
+
+  // @override
+  // void initState() {
+  //   super.initState();
+
+  //   focus = FocusNode();
+  // }
 
   void lastBubbleHandle({@required BubbleInterfaceHandle bubbleInterfaceHandle}){
     // print("Halo --__--");
@@ -38,7 +39,7 @@ class _ReuseChat extends State<ReuseChat> {
               child: StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
                         .collection('messages')
-                        .where('chat_id', isEqualTo: this.widget.chat.id)
+                        .where('chat_id', isEqualTo: this.chat.id)
                         .orderBy('date_created')
                         .snapshots(),
                 builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -73,7 +74,8 @@ class _ReuseChat extends State<ReuseChat> {
                         );
                         return Bubble(
                           sender: sender,
-                          isPM: this.widget.chat.isPM,
+                          user: this.user,
+                          isPM: this.chat.isPM,
                           message: doc.data()['content'],
                           lastBubbleHandle: lastBubbleHandle,
                           getLastBubbleInterfaceHandle: getLastBubbleInterfaceHandle,
@@ -86,44 +88,12 @@ class _ReuseChat extends State<ReuseChat> {
             ),
           ),
         ),
-        Container(
-          color: Colors.blue[100],
-          padding: EdgeInsets.only(bottom: 3),
-          child: Row(
-            children: [
-              Expanded(
-                flex: 1,
-                child: Icon(Icons.emoji_emotions_outlined),
-              ),
-              Expanded(
-                flex: 8,
-                child: TextField(
-                controller: messageController,
-                  textAlign: TextAlign.left,
-                  decoration: InputDecoration(
-                    // border: InputBorder.none,
-                    hintText: 'Type a message...',
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: GestureDetector(
-                  onTap: () {
-                    this.widget.chat.sendMessage(
-                      message: messageController.text,
-                      user: this.widget.user,
-                    );
-                    FocusScope.of(context).unfocus();
-                    messageController.text = '';
-                  },
-                  child: Icon(Icons.send),
-                ),
-              ),
-            ],
-          ),
+        MessageInput(
+          chat: chat,
+          user: user,
         ),
       ],
     );
   }
+
 }

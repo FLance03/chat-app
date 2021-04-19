@@ -11,23 +11,24 @@ class AdminAction {
 
 class PopUpAdminActions extends StatelessWidget {
   bool isAdmin;
+  User user;
+  Group chat;
 
-  PopUpAdminActions({@required this.isAdmin});
+  PopUpAdminActions({@required this.isAdmin, @required this.user, @required this.chat});
 
   Widget build (BuildContext context) {
     return PopupMenuButton<String>(
       onSelected: (String result) {
         switch (result) {
-          case 'Admin': ManageChat.MakeAdmin(); break;
-          case 'User': ManageChat.MakeUser(); break;
-          case 'Kick': ManageChat.KickUser(); break;
+          case 'Admin': this.chat.MakeAdmin(user: user); break;
+          case 'User': this.chat.RemoveAdmin(user: user); break;
+          case 'Kick': this.chat.KickUser(user: user); break;
         }
-        ManageChat.MakeAdmin();
       },
       itemBuilder: (BuildContext context) => [
         isAdmin ? PopupMenuItem<String>(
           value: 'User',
-          child: Text('Make User'),
+          child: Text('Remove Admin Privilege'),
         )       : PopupMenuItem<String>(
           value: 'Admin',
           child: Text('Make Admin'),

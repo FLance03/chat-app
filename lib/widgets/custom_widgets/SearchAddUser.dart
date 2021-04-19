@@ -21,48 +21,45 @@ class _SearchAddUser extends State<SearchAddUser> {
         height: 250,
         child: Column(
           children: [
-            Expanded(
-              flex: 3,
-              child: Padding(
-                padding: EdgeInsets.only(bottom: 8.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      flex: 6,
-                      child: TextField(
-                        controller: textController,
-                        textAlign: TextAlign.left,
-                        // onChanged: (String value) {
-                        //   print('a');
-                        //   findUser(5);
-                        // },
-                        decoration: InputDecoration(
-                          hintText: 'Search to add user...',
-                        ),
+            Padding(
+              padding: EdgeInsets.only(bottom: 8.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 6,
+                    child: TextField(
+                      controller: textController,
+                      textAlign: TextAlign.left,
+                      // onChanged: (String value) {
+                      //   print('a');
+                      //   findUser(5);
+                      // },
+                      decoration: InputDecoration(
+                        hintText: 'Search to add user...',
                       ),
                     ),
-                    Expanded(
-                      flex: 4,
-                      child: TextButton(
-                        onPressed: () => findUser(textController.text, 5),
-                        child: Text('Search',
-                          style: TextStyle(
-                            fontSize: 15.0,
-                          ),
+                  ),
+                  Expanded(
+                    flex: 4,
+                    child: TextButton(
+                      onPressed: () => findUser(textController.text, 5),
+                      child: Text('Search',
+                        style: TextStyle(
+                          fontSize: 15.0,
                         ),
-                        style: ButtonStyle(
-                          foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                          backgroundColor: MaterialStateProperty.all<Color>(Colors.blue[400]),
-                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                            )
+                      ),
+                      style: ButtonStyle(
+                        foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                        backgroundColor: MaterialStateProperty.all<Color>(Colors.blue[400]),
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
                           )
-                        ),
+                        )
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
             Expanded(
@@ -74,16 +71,6 @@ class _SearchAddUser extends State<SearchAddUser> {
           ],
         ),
       ),
-      actions: <Widget>[
-        TextButton(
-          child: Text('Add'),
-          onPressed: () {
-            if (textController.text != ''){
-              Navigator.of(context).pop();
-            }
-          },
-        ),
-      ],
     );
   }
   void findUser (String term, int maxUser) async{
@@ -91,8 +78,9 @@ class _SearchAddUser extends State<SearchAddUser> {
                                             text: term,
                                             maxCount: 5,
                                           );
-    
-    possibleUsersWidget = [];
+    setState(() {
+      possibleUsersWidget = [];
+    });
     for (int i=0 ; i<possibleUsers.length ; i++){
       setState(() {
         possibleUsersWidget.add(

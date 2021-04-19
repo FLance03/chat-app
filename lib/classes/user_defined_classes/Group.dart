@@ -3,20 +3,31 @@ import 'package:flutter/material.dart';
 import '../classes.dart';
 
 class Group extends Chat{
-  String name;
-  List<String> members = [], admins = [];
 
-  Group({String id, bool isPM, List<String> members, List<String> admins, String name}):
-    this.name = name,
-    this.admins = admins,
+  Group({String id}):
     super(
       id: id, 
-      isPM: isPM, 
-      members: members,
+      isPM: false,
     );
   
-  String getName(User user) {
-    return name;
+  Stream<String> getName() {
+    return FirebaseFirestore.instance
+    .collection("chats")
+    .doc(this.id)
+    .snapshots()
+    .map<String>((DocumentSnapshot doc){
+      return doc.data()['name'];
+    });
+  }
+  void updateGroupName({String name}) {
+    FirebaseFirestore.instance
+    .collection("chats")
+    .doc(this.id)
+    .update({
+      "name": name,
+    }).catchError((e){
+      print("$e");
+    });
   }
 
   Future<List<User>> findPossibleUser({String text, int maxCount}) async{
@@ -24,45 +35,172 @@ class Group extends Chat{
       text: text,
       maxCount: maxCount,
     );
-    List<User> retVal = [];
-    users.forEach((user) { 
-      if (members.indexWhere((member) => member==user.id) == -1){
-        retVal.add(user);
-      }
+    return FirebaseFirestore.instance
+    .collection('chats')
+    .doc(this.id)
+    .get()
+    .then((DocumentSnapshot doc) {
+      List<User> retVal = [];
+      users.forEach((user) { 
+        print(user.id);
+        if (doc["admins"].indexWhere((admin) => admin["id"]==user.id)==-1
+         && doc["non-admins"].indexWhere((nonAdmin) => nonAdmin["id"]==user.id)==-1 ){
+          retVal.add(user);
+        }
+      });
+      return retVal;
+    }).catchError((e) {
+      print("$e");
     });
-    return retVal;
   }
   void addUserToGroupChat({User user}) {
     FirebaseFirestore.instance
     .collection('chats')
     .doc(this.id)
     .update({
-      "members": FieldValue.arrayUnion([{
+      "non-admins": FieldValue.arrayUnion([{
         "id": user.id,
         "name": user.name,
       }])
-    }).then((result){
-      members.add(user.id);
     }).catchError((e){
       print("$e");
     });
   }
 
-  Future<List<User>> getAdmins() {
+  Stream<List<User>> getAdmins() {
+    return FirebaseFirestore.instance
+    .collection("chats")
+    .doc(this.id)
+    .snapshots()
+    .map<List<User>>((DocumentSnapshot doc) {
+      List<dynamic> admins = doc.data()['admins'];
+      admins = admins.map((admin) => User(
+        id: admin['id'],
+        name: admin['name'],
+      )).toList();
+      admins.sort((left,right) => left.name.compareTo(right.name));
+      return admins;
+    });
+    // .get()
+    // .then((DocumentSnapshot doc) {
+    //   List<dynamic> admins = doc.data()['admins'];
+    //   print(admins);
+    //   return admins.map((admin) => User(
+    //     id: admin['id'],
+    //     name: admin['name'],
+    //   )).toList();
+    // })
+    // .catchError((e) {
+    //   print("$e");
+    // });
+  }
+  Widget StreamAdminDependency({@required User user, 
+                                @required Widget waiting, 
+                                @required Widget outputPositive, 
+                                @required Widget outputNegative}) {
+    return StreamBuilder<List<User>>(
+      stream: this.getAdmins(),
+      builder: (BuildContext context, AsyncSnapshot<List<User>> snapshot) {
+        if (snapshot.hasError) {
+          return Text(snapshot.error.toString());;
+        }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return waiting;
+        }
+        if (snapshot.data.indexWhere((admin) => admin.id==user.id) == -1) {
+          return outputNegative;
+        }else {
+          return outputPositive;
+        }
+      }
+    );
+  }
+  Stream<List<User>> getNonAdmins() {
+    return FirebaseFirestore.instance
+    .collection("chats")
+    .doc(this.id)
+    .snapshots()
+    .map<List<User>>((DocumentSnapshot doc){
+      List<dynamic> nonAdmins = doc.data()['non-admins'];
+      nonAdmins = nonAdmins.map((nonAdmin) => User(
+        id: nonAdmin['id'],
+        name: nonAdmin['name'],
+      )).toList();
+      nonAdmins.sort((left,right) => left.name.compareTo(right.name));
+      return nonAdmins;
+    });
+  }
+  
+  Future<void> MakeAdmin({User user}) {
+    WriteBatch batch = FirebaseFirestore.instance.batch();
+
     return FirebaseFirestore.instance
     .collection("chats")
     .doc(this.id)
     .get()
     .then((DocumentSnapshot doc) {
-      List<Map<String,String>> admins = doc.data()['admins'];
-
-      return admins.map((admin) => User(
-        id: admin['id'],
-        name: admin['name'],
-      )).toList();
-    })
-    .catchError((e) {
-      print("$e");
+      batch.update(doc.reference, {
+        "admins": FieldValue.arrayUnion([{
+          "id": user.id,
+          "name": user.name,
+        }])
+      });
+      batch.update(doc.reference, {
+        'non-admins': FieldValue.arrayRemove([{
+          "id": user.id,
+          "name": user.name,
+        }])
+      });
+      return batch.commit();
     });
   }
+
+  Future<void> RemoveAdmin({User user}) {
+    WriteBatch batch = FirebaseFirestore.instance.batch();
+
+    return FirebaseFirestore.instance
+    .collection("chats")
+    .doc(this.id)
+    .get()
+    .then((DocumentSnapshot doc) {
+      batch.update(doc.reference, {
+        "non-admins": FieldValue.arrayUnion([{
+          "id": user.id,
+          "name": user.name,
+        }])
+      });
+      batch.update(doc.reference, {
+        'admins': FieldValue.arrayRemove([{
+          "id": user.id,
+          "name": user.name,
+        }])
+      });
+      return batch.commit();
+    });
+  }
+
+  Future<void> KickUser({User user}) {
+    WriteBatch batch = FirebaseFirestore.instance.batch();
+
+    return FirebaseFirestore.instance
+    .collection("chats")
+    .doc(this.id)
+    .get()
+    .then((DocumentSnapshot doc) {
+      batch.update(doc.reference, {
+        "non-admins": FieldValue.arrayRemove([{
+          "id": user.id,
+          "name": user.name,
+        }])
+      });
+      batch.update(doc.reference, {
+        'admins': FieldValue.arrayRemove([{
+          "id": user.id,
+          "name": user.name,
+        }])
+      });
+      return batch.commit();
+    });
+  }
+
 }

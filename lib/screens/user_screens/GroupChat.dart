@@ -5,21 +5,12 @@ import '../../classes/classes.dart';
 
 class GroupChat extends StatefulWidget {
   User user = User(
-    id: "Tzt9xxCF3it4dCzvby40",
-    name: "Alice",
+    id: "Su80LbnaD0Szia4Yh7QM",
+    name: "bob",
   );
   
-  Group chat = Group(
+  Chat chat = Group(
     id: 'w8RTtLLQM93tZ6PxyVLH',
-    name: 'The First Group',
-    isPM: false,
-    members: [
-      'Tzt9xxCF3it4dCzvby40', 
-      'Su80LbnaD0Szia4Yh7QM',
-    ],
-    admins: [
-      'Tzt9xxCF3it4dCzvby40',
-    ]
   );
 
   GroupChat({@required user});
@@ -76,37 +67,19 @@ class _GroupChat extends State<GroupChat> {
   // ]));
 
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: FirebaseFirestore.instance
-              .collection("chats")
-              .doc("w8RTtLLQM93tZ6PxyVLH")
-              .get(),
-      builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-
-        if (snapshot.hasError) {
-          return Text(snapshot.error.toString());
-        }
-
-        if (snapshot.connectionState == ConnectionState.done) {
-          Map<String, dynamic> data = snapshot.data.data();
-          return Scaffold(
-            appBar: ChatAppBar(
-              chat: this.widget.chat,
-              user: this.widget.user,
-            ),
-            body: ReuseChat(
-              chat: this.widget.chat,
-              user: this.widget.user,
-            ),
-            endDrawer: ChatEndDrawer(
-              chat: this.widget.chat,
-              user: this.widget.user,
-            ),
-          );
-        }
-
-        return Text("loading");
-      },
+    return Scaffold(
+      appBar: ChatAppBar(
+        chat: this.widget.chat,
+        user: this.widget.user,
+      ),
+      body: ReuseChat(
+        chat: this.widget.chat,
+        user: this.widget.user,
+      ),
+      endDrawer: ChatEndDrawer(
+        chat: this.widget.chat,
+        user: this.widget.user,
+      ),
     );
     // return Scaffold(
     //   appBar: ChatAppBar(

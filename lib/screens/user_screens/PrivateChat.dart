@@ -8,16 +8,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class PrivateChat extends StatefulWidget {
   User user = User(
     id: "Tzt9xxCF3it4dCzvby40",
-    name: "Alice",
+    name: "alice",
   );
   
-  Chat chat = Chat(
-    id: 'w8RTtLLQM93tZ6PxyVLH',
-    isPM: true,
-    members: [
-      'Tzt9xxCF3it4dCzvby40', 
-      'Su80LbnaD0Szia4Yh7QM',
-    ],
+  Chat chat = Private(
+    id: 'bBgavsQER6cdwOTwtx8e',
+    name: 'bob',
   );
   @override
   _PrivateChat createState() => _PrivateChat();
@@ -27,7 +23,6 @@ class _PrivateChat extends State<PrivateChat> {
   TextEditingController messageController = new TextEditingController();
   ListQueue <Rant> rants = ListQueue();
   DocumentSnapshot lastMessage;
-  Chat chatContext = Chat();
   // Chat chatContext = Chat(ListQueue.from([
   //   MessageGroup(
   //     User(
@@ -96,47 +91,16 @@ class _PrivateChat extends State<PrivateChat> {
     //     });
     //   });
 
-    return FutureBuilder(
-      future: FirebaseFirestore.instance
-              .collection("chats")
-              .doc("Tzt9xxCF3it4dCzvby40")
-              .get(),
-      builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshotChat) {
-
-        if (snapshotChat.hasError) {
-          return Text(snapshotChat.error.toString());
-        }
-
-        if (snapshotChat.connectionState == ConnectionState.done) {
-          Map<String, dynamic> data = snapshotChat.data.data();
-          String otherUserId;
-          otherUserId = data['members'][0]==this.widget.user.id ? data['members'][1] : data['members'][0];
-          return FutureBuilder(
-            future: FirebaseFirestore.instance
-                    .collection("users")
-                    .doc(otherUserId)
-                    .get(),
-            builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshotUser) {
-              if (snapshotUser.hasError) {
-                return Text(snapshotUser.error.toString());
-              }
-              if (snapshotUser.connectionState == ConnectionState.done) {
-                return Scaffold(
-                  appBar: ChatAppBar(
-                    chat: this.widget.chat,
-                    user: this.widget.user,
-                  ),
-                  body: ReuseChat(
-                    chat: this.widget.chat,
-                  ),
-                );
-              }
-              return Text("loading");
-            }
-          );
-        }
-        return Text("loading");
-      },
+    return Scaffold(
+      appBar: ChatAppBar(
+        chat: this.widget.chat,
+        user: this.widget.user,
+      ),
+      body: ReuseChat(
+        chat: this.widget.chat,
+        user: this.widget.user,
+      ),
+    );
       // builder: (context, snapshot) {
       //   return Scaffold(
       //     appBar: ChatAppBar(
@@ -151,6 +115,5 @@ class _PrivateChat extends State<PrivateChat> {
       //     endDrawer: ChatEndDrawer(),
       //   );
       // }
-    );
   }
 }
