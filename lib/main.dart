@@ -1,9 +1,19 @@
+import 'package:chat_app/authentication_service.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'screens/screens.dart';
-import './classes/classes.dart';
+import 'classes/classes.dart';
+
+/*
+  TO DO:
+  - LINK AUTHENTICATION TO USER
+  - MIGRATE USERS TO AUTHENTICATION TAB IN FIREBASE
+  - IMPLEMENT CHAT SELECTION SCREEN
+*/
 
 //Screens as String Variables
-const TestRoute = '/';
 // const Login = '/Login';
 const Login = '/';
 const Signup = '/Signup';
@@ -21,11 +31,29 @@ const AnnouncementDetails = '/AnnouncementDetails';
 Future main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(MaterialApp(
-    debugShowCheckedModeBanner: false,
-    onGenerateRoute: _routes(), //default routes is '/' which is LoginPage()
-    theme: _theme(),
-  ));
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        Provider<AuthenticationService>(
+          create: (_) => AuthenticationService(auth.FirebaseAuth.instance),
+        ),
+        StreamProvider(
+          create: (context) => context.read<AuthenticationService>().authStateChanges,
+        )
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        onGenerateRoute: _routes(), //default routes is '/' which is LoginPage()
+        // onGenerateRoute: AuthenticationWrapper(),
+        theme: _theme(),
+      )
+    );
+  }
 }
 
 ThemeData _theme() {
@@ -40,9 +68,9 @@ RouteFactory _routes() {
     final Map<String, dynamic> arguments = settings.arguments; //Needed for passing data between screens
     Widget screen;
     switch (settings.name) {
-      case TestRoute:
-        screen = GroupChat();
-        break;
+      // add logout button
+      case '/': screen = AuthenticationWrapper(); break;
+      case '/signup': screen = SignUpPage(); break;
       // case Login:
       //   screen = LoginPage();
       //   break;
@@ -57,4 +85,16 @@ RouteFactory _routes() {
     }
     return MaterialPageRoute(builder: (BuildContext context) => screen);
   };
+}
+
+class AuthenticationWrapper extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final firebaseUser = context.watch<auth.User>();
+
+    if (firebaseUser != null) {
+      return GroupChat();
+    }
+    return SignInPage();
+  }
 }

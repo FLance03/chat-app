@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'dart:collection';
 import '../../widgets/widgets.dart';
 import '../../classes/classes.dart';
+import '../../authentication_service.dart';
 
 class ChatEndDrawer extends StatelessWidget {
   Group chat;
@@ -14,7 +16,7 @@ class ChatEndDrawer extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: <Widget>[
           DrawerHeader(
-            child: Text('SpaceX'),
+            child: Text('SpaceX'), // chat title
           ),
           this.chat.StreamAdminDependency(
             user: this.user,
@@ -104,6 +106,12 @@ class ChatEndDrawer extends StatelessWidget {
               );
             },
           ),
+          ElevatedButton(
+            onPressed: () {
+              context.read<AuthenticationService>().signOut();
+            }, 
+            child: Text("Sign Out")
+          ),
             // [
             //   ListTile(
             //     title: Text('Member A'),
@@ -152,5 +160,4 @@ class ChatEndDrawer extends StatelessWidget {
       ),
     );
   }
-  
 }

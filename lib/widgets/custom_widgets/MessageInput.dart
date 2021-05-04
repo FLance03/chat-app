@@ -45,7 +45,6 @@ class _MessageInput extends State<MessageInput> {
                   flex: 8,
                   child: TextField(
                     onTap: () {
-                      print("HIOOOOOOOOIIIII");
                       setState(() {
                         showSticker = false;
                       });
