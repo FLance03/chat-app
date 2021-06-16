@@ -7,10 +7,13 @@ class User {
   User({this.id, this.name});
 
   
-  static Future<List<User>> findUser({String text, int maxCount}) {
+  static Future<List<User>> findUser({String text, int maxCount = -1}) {
     List<User> retVal = [];
     String lastCharacter;
 
+    if (maxCount == -1) {
+      maxCount = 999;
+    }
     text = text.trim().toLowerCase();
     lastCharacter = text.substring(text.length-1, text.length);
     return FirebaseFirestore.instance
@@ -34,7 +37,6 @@ class User {
       });
       return retVal;
     });
-
     // return [
     //   User(id: '1',name: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'),
     //   User(id: '2',name: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'),
@@ -42,5 +44,16 @@ class User {
     //   User(id: '4',name: 'cccccccccccccccccccccccccccccccccc'),
     //   User(id: '5',name: 'ddddddddddddddddddddddddddddddd'),
     // ];
+  }
+
+  String titleCaseName() {
+    String retVal = '';
+    bool wasSpace = true;
+
+    for (int i=0 ; i<this.name.length ; i++){
+      retVal += wasSpace ? this.name[i].toUpperCase() : this.name[i];
+      wasSpace = this.name[i]==' ' ? true : false;
+    }
+    return retVal;
   }
 }

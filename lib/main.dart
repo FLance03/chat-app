@@ -1,4 +1,5 @@
 import 'package:chat_app/authentication_service.dart';
+import 'package:chat_app/screens/user_screens/MainMenuSearch.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
@@ -69,7 +70,7 @@ RouteFactory _routes() {
     Widget screen;
     switch (settings.name) {
       // add logout button
-      case '/': screen = AuthenticationWrapper(); break;
+      case '/': screen = MainMenuSearch(); break;
       case '/signup': screen = SignUpPage(); break;
       // case Login:
       //   screen = LoginPage();

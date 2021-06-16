@@ -9,6 +9,32 @@ abstract class Chat {
   Chat({this.id, this.isPM});
 
   dynamic getName();
+  static void createChat({User creator, List<User> members}) {
+    bool isPM = members.length==1 ? true : false;
+    List<Map> nonAdmins = [];
+
+    members.forEach((member) { 
+      nonAdmins.add({
+        'id': member.id,
+        'name': member.name,
+      });
+    });
+    FirebaseFirestore.instance
+    .collection('chats')
+    .add({
+      'date_created': FieldValue.serverTimestamp(),
+      'date_last_sent': null,
+      'isPM': isPM,
+      'last_message': null,
+      'last_sender_id': null,
+      'non-admins': nonAdmins,
+      'admins': [{
+        'id': creator.id,
+        'name': creator.name,
+      }],
+    })
+    .catchError((e) => print("$e"));
+  }
   void sendMessage({String message, User user}) {
     FirebaseFirestore.instance
     .collection('messages')
@@ -21,6 +47,17 @@ abstract class Chat {
       'content': message,
     })
     .catchError((e) => print("$e"));
+
+    FirebaseFirestore.instance
+    .collection("chats")
+    .doc(this.id)
+    .update({
+      "last_message": message,
+      "date_last_sent": FieldValue.serverTimestamp(),
+      "last_sender_id": user.id,
+    }).catchError((e){
+      print("$e");
+    });
   }
 
 }

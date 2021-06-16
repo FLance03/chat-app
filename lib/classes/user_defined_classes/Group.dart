@@ -102,7 +102,7 @@ class Group extends Chat{
       stream: this.getAdmins(),
       builder: (BuildContext context, AsyncSnapshot<List<User>> snapshot) {
         if (snapshot.hasError) {
-          return Text(snapshot.error.toString());;
+          return Text(snapshot.error.toString());
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
           return waiting;

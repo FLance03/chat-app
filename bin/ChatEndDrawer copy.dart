@@ -23,13 +23,7 @@ class ChatEndDrawer extends StatelessWidget {
             waiting: Text("Loading..."),
             outputNegative: SizedBox(),
             outputPositive: ListTile(
-              title: Row(
-                children: [
-                  Icon(Icons.group_add),
-                  SizedBox(width: 10),
-                  Text('Add Members'),
-                ],
-              ),
+              title: Text('Add Members'),
               onTap: () {
                 return showDialog<void>(
                   context: context,
@@ -140,11 +134,44 @@ class ChatEndDrawer extends StatelessWidget {
                           ),
                         );
                       }
+                      // return admin.id==user.id ? SizedBox() : ListTile(
+                      //   title: Text(admin.name),
+                      //   trailing: this.chat.StreamAdminDependency(
+                      //     user: this.user,
+                      //     waiting: Text("Fetching Admin Data..."),
+                      //     outputNegative: SizedBox(),
+                      //     outputPositive: PopUpAdminActions(
+                      //       user: admin,
+                      //       chat: chat,
+                      //       isAdmin: true,
+                      //     ),
+                      //   ),
+                      // );
                     }
                   ).toList(),
                 );
               }
               return SizedBox();
+              // return ExpansionTile(
+              //   title: Text("Non-Admins"),
+              //   children: snapshot.data.map<Widget>(
+              //     (nonAdmin){
+              //       return nonAdmin.id==user.id ? SizedBox() : ListTile(
+              //         title: Text(nonAdmin.name),
+              //         trailing: this.chat.StreamAdminDependency(
+              //           user: this.user,
+              //           waiting: Text("Fetching Non-Admin Data..."),
+              //           outputNegative: SizedBox(),
+              //           outputPositive: PopUpAdminActions(
+              //             user: nonAdmin,
+              //             chat: chat,
+              //             isAdmin: false,
+              //           ),
+              //         ),
+              //       );
+              //     }
+              //   ).toList(),
+              // );
             },
           ),
           ElevatedButton(

@@ -100,7 +100,7 @@ class _Bubble extends State<Bubble> {
                 newRant ? Padding(padding: EdgeInsets.only(top: 5)) : SizedBox(),
                 !this.widget.isSender(this.widget.sender.id) && !this.widget.isPM && newRant? 
                 Text(
-                  this.widget.sender.name,
+                  this.widget.sender.titleCaseName(),
                   style: TextStyle(
                     fontStyle: FontStyle.italic,
                     color: Colors.black.withOpacity(0.9),

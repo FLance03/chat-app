@@ -37,6 +37,7 @@ class _SearchAddUser extends State<SearchAddUser> {
                       decoration: InputDecoration(
                         hintText: 'Search to add user...',
                       ),
+                      onSubmitted: (searchName) => findUser(searchName, 5),
                     ),
                   ),
                   Expanded(

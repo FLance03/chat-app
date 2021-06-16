@@ -6,14 +6,23 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PrivateChat extends StatefulWidget {
+  // User user = User(
+  //   id: "Tzt9xxCF3it4dCzvby40",
+  //   name: "alice",
+  // );
+  
+  // Chat chat = Private(
+  //   id: 'bBgavsQER6cdwOTwtx8e',
+  //   name: 'bob',
+  // );
   User user = User(
-    id: "Tzt9xxCF3it4dCzvby40",
-    name: "alice",
+    id: "Su80LbnaD0Szia4Yh7QM",
+    name: "bob",
   );
   
   Chat chat = Private(
-    id: 'bBgavsQER6cdwOTwtx8e',
-    name: 'bob',
+    id: 'rF95xvwJcVNyKNKO02e3',
+    name: 'charlie',
   );
   @override
   _PrivateChat createState() => _PrivateChat();
