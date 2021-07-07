@@ -70,7 +70,7 @@ RouteFactory _routes() {
     Widget screen;
     switch (settings.name) {
       // add logout button
-      case '/': screen = MainMenuSearch(); break;
+      case '/': screen = GroupChat(); break;
       case '/signup': screen = SignUpPage(); break;
       // case Login:
       //   screen = LoginPage();

@@ -9,16 +9,21 @@ abstract class Chat {
   Chat({this.id, this.isPM});
 
   dynamic getName();
+
   static void createChat({User creator, List<User> members}) {
     bool isPM = members.length==1 ? true : false;
     List<Map> nonAdmins = [];
-
+    List<String> members_field = [];
     members.forEach((member) { 
       nonAdmins.add({
         'id': member.id,
         'name': member.name,
       });
     });
+    members_field = members.map((member) {
+      return member.id;
+    }).toList();
+    members_field.add(creator.id);
     FirebaseFirestore.instance
     .collection('chats')
     .add({
@@ -32,6 +37,7 @@ abstract class Chat {
         'id': creator.id,
         'name': creator.name,
       }],
+      'members': members_field,
     })
     .catchError((e) => print("$e"));
   }
