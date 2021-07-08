@@ -12,15 +12,16 @@ class MainMenuSearch extends StatefulWidget {
   // MainMenuSearch({this.user});
   @override
   _MainMenuSearch createState() => _MainMenuSearch();
-  
 }
+
 class _MainMenuSearch extends State<MainMenuSearch> {
   List<User> addedUsers = [];
   AddUserHandle SearchedUser({User newUser}) {
-    setState((){
+    setState(() {
       addedUsers.add(newUser);
     });
   }
+
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -28,17 +29,16 @@ class _MainMenuSearch extends State<MainMenuSearch> {
         title: Text('Create New Conversation'),
       ),
       floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
-        tooltip: 'Create Conversation',
-        onPressed: () {
-          if (this.addedUsers.length > 0) {
-            Chat.createChat(
-              creator: this.widget.user, 
-              members: this.addedUsers,
-            );
-          }
-        }
-      ),
+          child: const Icon(Icons.add),
+          tooltip: 'Create Conversation',
+          onPressed: () {
+            if (this.addedUsers.length > 0) {
+              Chat.createChat(
+                creator: this.widget.user,
+                members: this.addedUsers,
+              );
+            }
+          }),
       body: Stack(
         children: [
           Positioned(
@@ -60,47 +60,47 @@ class _MainMenuSearch extends State<MainMenuSearch> {
                     Padding(
                       padding: EdgeInsets.all(10),
                       child: Wrap(
-                        runSpacing: 5.0,
-                        spacing: 5.0,
-                        children: addedUsers.map<Widget> ((user) {
-                          return GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                this.addedUsers.removeWhere((addedUser) => addedUser.id==user.id);
-                              });
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Colors.grey[600],
-                                ),
-                                borderRadius: BorderRadius.all(Radius.circular(20))
-                              ),
-                              margin: EdgeInsets.all(2.0),
-                              padding: EdgeInsets.all(5.0),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    user.titleCaseName(),
-                                    style: TextStyle(
+                          runSpacing: 5.0,
+                          spacing: 5.0,
+                          children: addedUsers.map<Widget>((user) {
+                            return GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  this.addedUsers.removeWhere(
+                                      (addedUser) => addedUser.id == user.id);
+                                });
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    border: Border.all(
                                       color: Colors.grey[600],
-                                      fontSize: 18,
                                     ),
-                                  ),
-                                  Text(
-                                    ' X',
-                                    style: TextStyle(
-                                      color: Colors.red[300],
-                                      fontSize: 18,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20))),
+                                margin: EdgeInsets.all(2.0),
+                                padding: EdgeInsets.all(5.0),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      user.titleCaseName(),
+                                      style: TextStyle(
+                                        color: Colors.grey[600],
+                                        fontSize: 18,
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                    Text(
+                                      ' X',
+                                      style: TextStyle(
+                                        color: Colors.red[300],
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          );
-                        }).toList()
-                      ),
+                            );
+                          }).toList()),
                     ),
                   ],
                 ),

@@ -3,10 +3,9 @@ import '../classes.dart';
 
 class User {
   String name, id;
-  
+
   User({this.id, this.name});
 
-  
   static Future<List<User>> findUser({String text, int maxCount = -1}) {
     List<User> retVal = [];
     String lastCharacter;
@@ -15,19 +14,21 @@ class User {
       maxCount = 999;
     }
     text = text.trim().toLowerCase();
-    lastCharacter = text.substring(text.length-1, text.length);
+    lastCharacter = text.substring(text.length - 1, text.length);
     return FirebaseFirestore.instance
-    .collection("users")
-    .limit(maxCount)
-    .where("name", isGreaterThanOrEqualTo: text)
-    .where("name", isLessThan: text.replaceRange(text.length-1, 
-                                                text.length, 
-                                                String.fromCharCode(lastCharacter.codeUnitAt(0)+1)
-                                                ) // Replace last character with the next code unit
-          )
-    .get() // Query Starts with "term"
-    .then((QuerySnapshot querySnapshot) {
-      querySnapshot.docs.forEach((DocumentSnapshot  doc) {
+        .collection("users")
+        .limit(maxCount)
+        .where("name", isGreaterThanOrEqualTo: text)
+        .where("name",
+            isLessThan: text.replaceRange(
+                text.length - 1,
+                text.length,
+                String.fromCharCode(lastCharacter.codeUnitAt(0) +
+                    1)) // Replace last character with the next code unit
+            )
+        .get() // Query Starts with "term"
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((DocumentSnapshot doc) {
         retVal.add(
           User(
             id: doc.id,
@@ -50,9 +51,9 @@ class User {
     String retVal = '';
     bool wasSpace = true;
 
-    for (int i=0 ; i<this.name.length ; i++){
+    for (int i = 0; i < this.name.length; i++) {
       retVal += wasSpace ? this.name[i].toUpperCase() : this.name[i];
-      wasSpace = this.name[i]==' ' ? true : false;
+      wasSpace = this.name[i] == ' ' ? true : false;
     }
     return retVal;
   }

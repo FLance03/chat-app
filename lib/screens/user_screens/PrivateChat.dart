@@ -10,7 +10,7 @@ class PrivateChat extends StatefulWidget {
   //   id: "Tzt9xxCF3it4dCzvby40",
   //   name: "alice",
   // );
-  
+
   // Chat chat = Private(
   //   id: 'bBgavsQER6cdwOTwtx8e',
   //   name: 'bob',
@@ -19,18 +19,18 @@ class PrivateChat extends StatefulWidget {
     id: "Su80LbnaD0Szia4Yh7QM",
     name: "bob",
   );
-  
+
   Chat chat = Private(
     id: 'rF95xvwJcVNyKNKO02e3',
     name: 'charlie',
   );
   @override
   _PrivateChat createState() => _PrivateChat();
-  
 }
+
 class _PrivateChat extends State<PrivateChat> {
   TextEditingController messageController = new TextEditingController();
-  ListQueue <Rant> rants = ListQueue();
+  ListQueue<Rant> rants = ListQueue();
   DocumentSnapshot lastMessage;
   // Chat chatContext = Chat(ListQueue.from([
   //   MessageGroup(
@@ -78,7 +78,6 @@ class _PrivateChat extends State<PrivateChat> {
   // ]));
 
   Widget build(BuildContext context) {
-
     // FirebaseFirestore.instance
     //   .collection('messages')
     //   .where('chat_id', isEqualTo: 'w8RTtLLQM93tZ6PxyVLH')
@@ -110,19 +109,19 @@ class _PrivateChat extends State<PrivateChat> {
         user: this.widget.user,
       ),
     );
-      // builder: (context, snapshot) {
-      //   return Scaffold(
-      //     appBar: ChatAppBar(
-      //       originalGroupName: 'Test',
-      //       isPM: true,
-      //     ),
-      //     body: ReuseChat(
-      //       rants: rants,
-      //       chatContext: chatContext,
-      //       isPM: true,
-      //     ),
-      //     endDrawer: ChatEndDrawer(),
-      //   );
-      // }
+    // builder: (context, snapshot) {
+    //   return Scaffold(
+    //     appBar: ChatAppBar(
+    //       originalGroupName: 'Test',
+    //       isPM: true,
+    //     ),
+    //     body: ReuseChat(
+    //       rants: rants,
+    //       chatContext: chatContext,
+    //       isPM: true,
+    //     ),
+    //     endDrawer: ChatEndDrawer(),
+    //   );
+    // }
   }
 }

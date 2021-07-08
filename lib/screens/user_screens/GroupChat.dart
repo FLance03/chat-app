@@ -8,7 +8,7 @@ class GroupChat extends StatefulWidget {
     id: "Su80LbnaD0Szia4Yh7QM",
     name: "bob",
   );
-  
+
   Chat chat = Group(
     id: 'w8RTtLLQM93tZ6PxyVLH',
   );
@@ -16,11 +16,11 @@ class GroupChat extends StatefulWidget {
   GroupChat({@required user});
   @override
   _GroupChat createState() => _GroupChat();
-  
 }
+
 class _GroupChat extends State<GroupChat> {
   TextEditingController messageController = new TextEditingController();
-  ListQueue <Rant> rants = ListQueue();
+  ListQueue<Rant> rants = ListQueue();
   // Chat chatContext = Chat(ListQueue.from([
   //   MessageGroup(
   //     User(

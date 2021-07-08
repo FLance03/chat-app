@@ -1,101 +1,64 @@
-import 'package:chat_app/authentication_service.dart';
-import 'package:chat_app/screens/user_screens/MainMenuSearch.dart';
-import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'package:chat_app/helper/authenticate.dart';
+import 'package:chat_app/helper/helperfunctions.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
-import 'screens/screens.dart';
-import 'classes/classes.dart';
 
-/*
-  TO DO:
-  - LINK AUTHENTICATION TO USER
-  - MIGRATE USERS TO AUTHENTICATION TAB IN FIREBASE
-  - IMPLEMENT CHAT SELECTION SCREEN
-*/
-
-//Screens as String Variables
-// const Login = '/Login';
-const Login = '/';
-const Signup = '/Signup';
-const Home = '/Home';
-const Hotels = '/Hotels';
-const HotelDetails = '/HotelDetails';
-const Booking = '/Booking';
-const Complete = '/Complete';
-const RoomServiceMain = '/RoomServiceMain';
-const RoomServiceProducts = '/RoomServiceProducts';
-const RoomServiceCleaning = '/RoomServiceCleaning';
-const AnnouncementDetails = '/AnnouncementDetails';
-
-
-Future main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget{
+class MyApp extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        Provider<AuthenticationService>(
-          create: (_) => AuthenticationService(auth.FirebaseAuth.instance),
-        ),
-        StreamProvider(
-          create: (context) => context.read<AuthenticationService>().authStateChanges,
-        )
-      ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        onGenerateRoute: _routes(), //default routes is '/' which is LoginPage()
-        // onGenerateRoute: AuthenticationWrapper(),
-        theme: _theme(),
-      )
-    );
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  bool userIsLoggedIn = false;
+  @override
+  void initState() {
+    getLoggedInState();
+    super.initState();
   }
-}
 
-ThemeData _theme() {
-  return ThemeData(
-    primaryColor: Colors.white,
-    visualDensity: VisualDensity.adaptivePlatformDensity,
-  );
-}
+  getLoggedInState() async {
+    await HelperFuntions.getUserLoggedInSharedPreference().then((value) {
+      setState(() {
+        userIsLoggedIn = value;
+      });
+    });
+  }
 
-RouteFactory _routes() {
-  return (settings) {
-    final Map<String, dynamic> arguments = settings.arguments; //Needed for passing data between screens
-    Widget screen;
-    switch (settings.name) {
-      // add logout button
-      case '/': screen = GroupChat(); break;
-      case '/signup': screen = SignUpPage(); break;
-      // case Login:
-      //   screen = LoginPage();
-      //   break;
-      // case Complete:
-      //   screen = CompletePage(dateCheckin: arguments['date_checkin'], dateCheckout: arguments['date_checkout']);
-      //   break;
-      // case AnnouncementDetails:
-      //   screen = AnnouncementDetailsPage(id: arguments['id']);
-      //   break;
-      default:
-        return null;
-    }
-    return MaterialPageRoute(builder: (BuildContext context) => screen);
-  };
-}
-
-class AuthenticationWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final firebaseUser = context.watch<auth.User>();
-
-    if (firebaseUser != null) {
-      return GroupChat();
-    }
-    return SignInPage();
+    return MaterialApp(
+      title: 'Mobile Stream Chat',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.indigo,
+        accentColor: Colors.yellow[900],
+        fontFamily: 'Raleway',
+        textTheme: ThemeData.light().textTheme.copyWith(
+              bodyText2: TextStyle(
+                color: Color.fromRGBO(20, 51, 51, 1),
+              ),
+              bodyText1: TextStyle(
+                color: Color.fromRGBO(20, 51, 51, 1),
+              ),
+              headline5: TextStyle(
+                fontSize: 20.0,
+                fontFamily: 'Raleway',
+                fontWeight: FontWeight.bold,
+              ),
+              headline6: TextStyle(
+                fontSize: 20.0,
+                fontFamily: 'Raleway',
+              ),
+            ),
+      ),
+      home: Authenticate(),
+      //userIsLoggedIn ? ChatRoom() :
+    );
   }
 }
