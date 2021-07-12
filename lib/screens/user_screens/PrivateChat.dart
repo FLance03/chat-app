@@ -15,15 +15,11 @@ class PrivateChat extends StatefulWidget {
   //   id: 'bBgavsQER6cdwOTwtx8e',
   //   name: 'bob',
   // );
-  User user = User(
-    id: "Su80LbnaD0Szia4Yh7QM",
-    name: "bob",
-  );
+  final User user;
+  final Chat chat;
 
-  Chat chat = Private(
-    id: 'rF95xvwJcVNyKNKO02e3',
-    name: 'charlie',
-  );
+  PrivateChat({@required this.user, this.chat});
+
   @override
   _PrivateChat createState() => _PrivateChat();
 }

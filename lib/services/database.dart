@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../classes/classes.dart';
 
 class DatabaseMethods {
   getUserbyUsername(String username) async {
@@ -21,8 +22,8 @@ class DatabaseMethods {
     });
   }
 
-  getChatRooms(String userId) async {
-    return await FirebaseFirestore.instance
+  getChatRooms(String userId) async { // chatroom get
+    return FirebaseFirestore.instance // accesses chatroom list, goes to members and find matching userID
         .collection("chats")
         .where("members", arrayContains: userId)
         .snapshots();

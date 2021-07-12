@@ -4,16 +4,10 @@ import '../../widgets/widgets.dart';
 import '../../classes/classes.dart';
 
 class GroupChat extends StatefulWidget {
-  User user = User(
-    id: "Su80LbnaD0Szia4Yh7QM",
-    name: "bob",
-  );
+  final User user;
+  final Chat chat;
 
-  Chat chat = Group(
-    id: 'w8RTtLLQM93tZ6PxyVLH',
-  );
-
-  GroupChat({@required user});
+  GroupChat({@required this.user, this.chat});
   @override
   _GroupChat createState() => _GroupChat();
 }

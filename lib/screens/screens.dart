@@ -6,3 +6,4 @@ export 'user_screens/GroupChat.dart';
 export 'user_screens/SignIn.dart';
 export 'user_screens/SignUp.dart';
 export 'user_screens/chatRoomScreen.dart';
+export 'user_screens/MainMenuSearch.dart';
