@@ -76,7 +76,7 @@ class _MainMenuSearch extends State<MainMenuSearch> {
         children: [
           Positioned(
             top: 100,
-            height: 500,
+            height: 700,
             child: Center(
               child: Container(
                 padding: EdgeInsets.all(20),
@@ -180,7 +180,7 @@ class _MainMenuSearch extends State<MainMenuSearch> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(top: 10),
+                      padding: EdgeInsets.only(top: 50),
                       child: Text(
                         'Added',
                         style: TextStyle(
