@@ -14,7 +14,7 @@ class GroupChat extends StatefulWidget {
 
 class _GroupChat extends State<GroupChat> {
   TextEditingController messageController = new TextEditingController();
-  ListQueue<Rant> rants = ListQueue();
+  // ListQueue<Rant> rants = ListQueue();
   // Chat chatContext = Chat(ListQueue.from([
   //   MessageGroup(
   //     User(

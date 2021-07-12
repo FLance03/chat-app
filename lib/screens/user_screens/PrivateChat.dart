@@ -26,7 +26,7 @@ class PrivateChat extends StatefulWidget {
 
 class _PrivateChat extends State<PrivateChat> {
   TextEditingController messageController = new TextEditingController();
-  ListQueue<Rant> rants = ListQueue();
+  // ListQueue<Rant> rants = ListQueue();
   DocumentSnapshot lastMessage;
   // Chat chatContext = Chat(ListQueue.from([
   //   MessageGroup(
@@ -74,6 +74,8 @@ class _PrivateChat extends State<PrivateChat> {
   // ]));
 
   Widget build(BuildContext context) {
+    print('sdadasdasd');
+    print(this.widget.chat.id);
     // FirebaseFirestore.instance
     //   .collection('messages')
     //   .where('chat_id', isEqualTo: 'w8RTtLLQM93tZ6PxyVLH')

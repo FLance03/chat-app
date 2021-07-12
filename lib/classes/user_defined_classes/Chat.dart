@@ -9,10 +9,12 @@ abstract class Chat {
 
   dynamic getName();
 
-  static void createChat({User creator, List<User> members}) {
+  static Future<DocumentReference> createChat({User creator, List<User> members}) async {
     bool isPM = members.length == 1 ? true : false;
     List<Map> nonAdmins = [];
     List<String> members_field = [];
+    DocumentReference doc;
+
     members.forEach((member) {
       nonAdmins.add({
         'id': member.id,
@@ -23,7 +25,7 @@ abstract class Chat {
       return member.id;
     }).toList();
     members_field.add(creator.id);
-    FirebaseFirestore.instance.collection('chats').add({
+    doc = await FirebaseFirestore.instance.collection('chats').add({
       'date_created': FieldValue.serverTimestamp(),
       'date_last_sent': null,
       'isPM': isPM,
@@ -37,7 +39,10 @@ abstract class Chat {
         }
       ],
       'members': members_field,
+      'name': "${creator.name}'s Group",
     }).catchError((e) => print("$e"));
+
+    return doc;
   }
 
   void sendMessage({String message, User user}) {

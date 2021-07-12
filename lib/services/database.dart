@@ -26,6 +26,7 @@ class DatabaseMethods {
     return FirebaseFirestore.instance // accesses chatroom list, goes to members and find matching userID
         .collection("chats")
         .where("members", arrayContains: userId)
+        .orderBy('date_last_sent', descending: true)
         .snapshots();
   }
 }

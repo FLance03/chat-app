@@ -20,13 +20,9 @@ class _ChatAppBar extends State<ChatAppBar> {
   Widget build(BuildContext context){
     return AppBar(
       title: this.widget.chat.isPM ? PrivateChatName() : OnClickGroupName(),
-      leading: CircleAvatar(
-        radius: 15,
-        child: ClipOval(
-          child: Image.asset('assets/noodles.PNG'),
-        ),
-      ),
-      leadingWidth: 40,
+      leading: (ModalRoute.of(context)?.canPop ?? false) ? BackButton() : null,
+      // ModalRoute.of(context)?.canPop means execute method canPop of ModalRoute.of(context) when latter is not null
+      // A ?? B means return B iff A is null to begin with
       actions: [
         this.widget.chat.isPM ? SizedBox() : Builder(
           builder: (context) => Padding(

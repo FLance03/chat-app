@@ -49,6 +49,7 @@ class _ChatRoomState extends State<ChatRoom> {
                 itemCount: snapshot.data.docs.length,
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
+                  print('lololol ${snapshot.data.docs[index].id}');
                   return ChatRoomsTile(
                     userObj: userObj, // get from chatrooms
                     chatRoomObj: snapshot.data.docs[index].data,
