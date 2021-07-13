@@ -87,10 +87,42 @@ class _ChatRoomState extends State<ChatRoom> {
         title: Text(
           "Chat App",
         ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: ()  {
+              User user;
+              showSearch(
+                context: context, 
+                delegate: NameSearch(user: this.userObj),
+              ).then((Chat chat) {
+                if (chat != null) {
+                  if (chat.isPM) {
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) =>
+                        PrivateChat(
+                          user: this.userObj,
+                          chat: chat,
+                        )
+                    ));
+                  }else {
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) =>
+                        GroupChat(
+                          user: this.userObj,
+                          chat: chat,
+                        )
+                    ));
+                  }
+                }
+              });
+            },
+          ),
+        ],
       ),
       body: chatRoomList(),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.search),
+        child: Icon(Icons.add),
         onPressed: () {
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => MainMenuSearch()));

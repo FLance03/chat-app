@@ -6,7 +6,7 @@ class User {
 
   User({this.id, this.name});
 
-  static Future<List<User>> findUser({String text, int maxCount = -1}) {
+  static Future<List<User>> findUser({String text='', int maxCount = -1}) {
     List<User> retVal = [];
     String lastCharacter;
 

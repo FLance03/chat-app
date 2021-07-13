@@ -10,6 +10,48 @@ class Group extends Chat{
       isPM: false,
     );
   
+  static Future<List<Group>> findName({@required User user, String text='', int maxCount=-1}) async{
+    List<Group> retVal = [];
+    String lastCharacter;
+
+    if (maxCount == -1) {
+      maxCount = 999;
+    }
+    text = text.trim().toLowerCase();
+    lastCharacter = text.substring(text.length - 1, text.length);
+    await FirebaseFirestore.instance
+      .collection('chats')
+      .where('name', isGreaterThanOrEqualTo: text.toUpperCase())
+      .where("name", isLessThanOrEqualTo: text.replaceRange(
+                              text.length - 1,
+                              text.length,
+                              String.fromCharCode(lastCharacter.codeUnitAt(0) +
+                                  1)) )
+      .where('members', arrayContains: user.id)
+      .orderBy('name')
+      .get()
+      .then((QuerySnapshot querySnapshot) {
+        text = text.toLowerCase();
+        querySnapshot.docs.forEach((DocumentSnapshot doc) {
+          String data = doc['name'].toString().trim().toLowerCase();
+          if (!doc['isPM'] && (text==data || (text.compareTo(data)==-1 && 
+                              text.replaceRange(
+                              text.length - 1,
+                              text.length,
+                              String.fromCharCode(lastCharacter.codeUnitAt(0) +
+                                  1)).compareTo(data)==1)) // Not PM and either equal to or within interval
+          ){
+            retVal.add(
+              Group(
+                id: doc.id,
+              ),
+            );
+          }
+        });
+      });
+      return retVal;
+    }
+
   Stream<String> getName() {
     return FirebaseFirestore.instance
     .collection("chats")
@@ -19,6 +61,7 @@ class Group extends Chat{
       return doc.data()['name'];
     });
   }
+
   void updateGroupName({String name}) {
     FirebaseFirestore.instance
     .collection("chats")

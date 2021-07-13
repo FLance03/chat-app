@@ -40,18 +40,35 @@ class _MainMenuSearch extends State<MainMenuSearch> {
             doc = await Chat.createChat(
               creator: this.widget.user,
               members: this.addedUsers,
-              isPM: false,
+              force: 'Group',
             );
             print(doc.id);
-            chat = Group(
-              id: doc.id,
-            );
+            if (this.addedUsers.length == 1) {
+              chat = await doc.get().then((DocumentSnapshot snapshot) {
+                String chatName;
+
+                chatName = snapshot.data()['admins'][0]['id']==this.widget.user.id ? snapshot.data()['non-admins'][0]['name'] : snapshot.data()['admins'][0]['name'];
+                return Private(
+                  id: doc.id,
+                  name: chatName,
+                );
+              });
+            }else {
+              chat = Group(
+                id: doc.id,
+              );
+            }
             return Navigator.pushReplacement(context, MaterialPageRoute(
               builder: (context) =>
-                GroupChat(
-                  user: this.widget.user,
-                  chat: chat,
-                )
+                this.addedUsers.length == 1 ?
+                  PrivateChat(
+                    user: this.widget.user,
+                    chat: chat,
+                  )
+                : GroupChat(
+                    user: this.widget.user,
+                    chat: chat,
+                  )
             ));
           }
         }

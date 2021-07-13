@@ -9,12 +9,14 @@ abstract class Chat {
 
   dynamic getName();
 
-  static Future<DocumentReference> createChat({User creator, List<User> members}) async {
-    bool isPM = members.length == 1 ? true : false;
+  static Future<DocumentReference> createChat({User creator, List<User> members,bool isPM}) async {
     List<Map> nonAdmins = [];
     List<String> members_field = [];
     DocumentReference doc;
 
+    if (isPM == null) {
+      isPM = members.length == 1 ? true : false;
+    }
     members.forEach((member) {
       nonAdmins.add({
         'id': member.id,
