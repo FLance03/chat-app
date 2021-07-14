@@ -29,13 +29,22 @@ class User {
         .get() // Query Starts with "term"
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((DocumentSnapshot doc) {
-        retVal.add(
-          User(
-            id: doc.id,
-            name: doc["name"],
-          ),
-        );
-      });
+          String data = doc['name'].toString().trim().toLowerCase();
+          if (text==data || (text.compareTo(data)==-1 && 
+                              text.replaceRange(
+                              text.length - 1,
+                              text.length,
+                              String.fromCharCode(lastCharacter.codeUnitAt(0) +
+                                  1)).compareTo(data)==1) // Not PM and either equal to or within interval
+          ){
+            retVal.add(
+              User(
+                id: doc.id,
+                name: doc["name"],
+              ),
+            );
+          }
+        });
       return retVal;
     });
     // return [

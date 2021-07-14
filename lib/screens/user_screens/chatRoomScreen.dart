@@ -101,7 +101,11 @@ class _ChatRoomState extends State<ChatRoom> {
                     Navigator.push(context, MaterialPageRoute(
                       builder: (context) =>
                         PrivateChat(
-                          user: this.userObj,
+                          user:
+User(
+    id: "Su80LbnaD0Szia4Yh7QM",
+    name: "bob",
+  ),
                           chat: chat,
                         )
                     ));
@@ -109,7 +113,11 @@ class _ChatRoomState extends State<ChatRoom> {
                     Navigator.push(context, MaterialPageRoute(
                       builder: (context) =>
                         GroupChat(
-                          user: this.userObj,
+                          user: 
+  User(
+    id: "Su80LbnaD0Szia4Yh7QM",
+    name: "bob",
+  ),
                           chat: chat,
                         )
                     ));

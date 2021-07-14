@@ -5,7 +5,12 @@ import '../../classes/classes.dart';
 class NameSearch extends SearchDelegate<Chat> {
   User user;
 
-  NameSearch({@required this.user});
+  NameSearch({@required this.user}){
+    this.user = User(
+      id: "Su80LbnaD0Szia4Yh7QM",
+      name: "bob",
+    );
+  }
   
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -42,7 +47,7 @@ class NameSearch extends SearchDelegate<Chat> {
     // ).then((matchedGroups) {
     //   groups = matchedGroups;
     // });
-    return FutureBuilder(
+    return query=='' ? TabBlueprint() : FutureBuilder(
       future: Future.wait([
         User.findUser(
           text: query,
@@ -70,7 +75,7 @@ class NameSearch extends SearchDelegate<Chat> {
           List<User> users = snapshot.data[0];
           List<Group> groups = snapshot.data[1];
 
-          groups.forEach((element) {print(element.id);});
+          users = users.where((user) => user.id != this.user.id).toList();
           return TabBlueprint(
             tabBarViews: [
               ListView(
@@ -86,7 +91,12 @@ class NameSearch extends SearchDelegate<Chat> {
                           .where('isPM', isEqualTo: true)
                           .get()
                           .then((QuerySnapshot querySnapshot) async {
-                            if (querySnapshot.docs.length == 0){
+                            List<QueryDocumentSnapshot> rightSnapshot = querySnapshot.docs.where(
+                                                                    (doc) => doc.data()['members'][0] == user.id ||
+                                                                              doc.data()['members'][1] == user.id
+                                                                    ).toList();
+                            if (rightSnapshot.length == 0){
+                              print('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
                               chat = await Chat.createChat(
                                 creator: this.user,
                                 members: [user],
@@ -102,10 +112,19 @@ class NameSearch extends SearchDelegate<Chat> {
                                 });
                               });
                             }else {
+                              print('BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB');
+                              String chatName;
+
+                              chatName = rightSnapshot[0].data()['admins'][0]['id']=='Su80LbnaD0Szia4Yh7QM' ? 
+                                          rightSnapshot[0].data()['non-admins'][0]['name'] : 
+                                          rightSnapshot[0].data()['admins'][0]['name'];
+                              print(rightSnapshot[0].id);
+                              print(chatName);
                               chat = Private(
-                                id: querySnapshot.docs[0].id,
-                                name: querySnapshot.docs[0]['name'],
+                                id: rightSnapshot[0].id,
+                                name: chatName,
                               );
+                              
                             }
                             close(context, chat);
                           });
@@ -126,6 +145,9 @@ class NameSearch extends SearchDelegate<Chat> {
                             text = 'Error';
                           }else {
                             switch (snapshot.connectionState) {
+                              case ConnectionState.none: 
+                                text = 'Loading...';
+                                break;
                               case ConnectionState.waiting: 
                                 text = 'Loading...';
                                 break;
@@ -174,7 +196,40 @@ class NameSearch extends SearchDelegate<Chat> {
         builder: (BuildContext context) {
           return Scaffold(
             appBar:TabBar(
-                tabs: <Tab>[Tab(text: 'Users'), Tab(text: 'Group Chats')],
+                tabs: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.person),
+                      SizedBox(
+                        width: 3,
+                      ),
+                      Tab(
+                        text: 'Users',
+                      ),
+                    ],
+                  ), 
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.group),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Tab(
+                        text: 'Group Chats',
+                      ),
+                    ],
+                  ),
+                  // Tab(
+                  //   text: 'Users',
+                  //   icon: Icon(Icons.person),
+                  // ), 
+                  // Tab(
+                  //   text: 'Group Chats',
+                  //   icon: Icon(Icons.group),
+                  // ),
+                ],
                 labelColor: Colors.black,
                 unselectedLabelColor: Colors.grey[400],
               ),

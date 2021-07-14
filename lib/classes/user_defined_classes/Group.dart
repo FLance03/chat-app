@@ -22,7 +22,7 @@ class Group extends Chat{
     await FirebaseFirestore.instance
       .collection('chats')
       .where('name', isGreaterThanOrEqualTo: text.toUpperCase())
-      .where("name", isLessThanOrEqualTo: text.replaceRange(
+      .where("name", isLessThan: text.replaceRange(
                               text.length - 1,
                               text.length,
                               String.fromCharCode(lastCharacter.codeUnitAt(0) +
