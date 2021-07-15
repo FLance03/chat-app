@@ -6,8 +6,8 @@ import '../../classes/classes.dart';
 
 class MainMenuSearch extends StatefulWidget {
   User user = User(
-    id: "wnUeIGibPFACcV8xeGvh",
-    name: "student",
+    id: "Su80LbnaD0Szia4Yh7QM",
+    name: "bob",
   );
 
   // MainMenuSearch({this.user});
