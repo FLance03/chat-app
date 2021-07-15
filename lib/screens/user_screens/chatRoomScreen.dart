@@ -91,7 +91,6 @@ class _ChatRoomState extends State<ChatRoom> {
           IconButton(
             icon: Icon(Icons.search),
             onPressed: ()  {
-              User user;
               showSearch(
                 context: context, 
                 delegate: NameSearch(user: this.userObj),
@@ -101,11 +100,7 @@ class _ChatRoomState extends State<ChatRoom> {
                     Navigator.push(context, MaterialPageRoute(
                       builder: (context) =>
                         PrivateChat(
-                          user:
-User(
-    id: "Su80LbnaD0Szia4Yh7QM",
-    name: "bob",
-  ),
+                          user: userObj,
                           chat: chat,
                         )
                     ));
@@ -113,11 +108,7 @@ User(
                     Navigator.push(context, MaterialPageRoute(
                       builder: (context) =>
                         GroupChat(
-                          user: 
-  User(
-    id: "Su80LbnaD0Szia4Yh7QM",
-    name: "bob",
-  ),
+                          user: userObj,
                           chat: chat,
                         )
                     ));

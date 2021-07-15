@@ -5,12 +5,7 @@ import '../../classes/classes.dart';
 class NameSearch extends SearchDelegate<Chat> {
   User user;
 
-  NameSearch({@required this.user}){
-    this.user = User(
-      id: "Su80LbnaD0Szia4Yh7QM",
-      name: "bob",
-    );
-  }
+  NameSearch({@required this.user});
   
   @override
   List<Widget> buildActions(BuildContext context) {
