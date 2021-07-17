@@ -97,16 +97,23 @@ class Group extends Chat{
     });
   }
   void addUserToGroupChat({User user}) {
+    WriteBatch batch = FirebaseFirestore.instance.batch();
+    
     FirebaseFirestore.instance
     .collection('chats')
     .doc(this.id)
-    .update({
-      "non-admins": FieldValue.arrayUnion([{
-        "id": user.id,
-        "name": user.name,
-      }])
-    }).catchError((e){
-      print("$e");
+    .get()
+    .then((DocumentSnapshot doc) {
+      batch.update(doc.reference, {
+        "non-admins": FieldValue.arrayUnion([{
+          "id": user.id,
+          "name": user.name,
+        }])
+      });
+      batch.update(doc.reference, {
+        'members': FieldValue.arrayUnion([user.id])
+      });
+      return batch.commit();
     });
   }
 
@@ -241,6 +248,9 @@ class Group extends Chat{
           "id": user.id,
           "name": user.name,
         }])
+      });
+      batch.update(doc.reference, {
+        'members': FieldValue.arrayRemove([user.id])
       });
       return batch.commit();
     });
