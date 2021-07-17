@@ -145,11 +145,6 @@ class ChatEndDrawer extends StatelessWidget {
               return SizedBox();
             },
           ),
-          ElevatedButton(
-              onPressed: () {
-                context.read<AuthMethods>().signOut();
-              },
-              child: Text("Sign Out")),
           // [
           //   ListTile(
           //     title: Text('Member A'),

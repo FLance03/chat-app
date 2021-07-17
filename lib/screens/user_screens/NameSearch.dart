@@ -110,7 +110,7 @@ class NameSearch extends SearchDelegate<Chat> {
                               print('BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB');
                               String chatName;
 
-                              chatName = rightSnapshot[0].data()['admins'][0]['id']=='Su80LbnaD0Szia4Yh7QM' ? 
+                              chatName = rightSnapshot[0].data()['admins'][0]['id']==this.user.id ? 
                                           rightSnapshot[0].data()['non-admins'][0]['name'] : 
                                           rightSnapshot[0].data()['admins'][0]['name'];
                               print(rightSnapshot[0].id);
