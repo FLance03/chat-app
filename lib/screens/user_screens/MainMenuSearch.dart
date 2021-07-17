@@ -5,12 +5,10 @@ import '../screens.dart';
 import '../../classes/classes.dart';
 
 class MainMenuSearch extends StatefulWidget {
-  User user = User(
-    id: "Su80LbnaD0Szia4Yh7QM",
-    name: "bob",
-  );
+  User user;
 
-  // MainMenuSearch({this.user});
+  MainMenuSearch({this.user});
+  
   @override
   _MainMenuSearch createState() => _MainMenuSearch();
 }
