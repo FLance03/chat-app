@@ -49,10 +49,10 @@ class _ChatRoomState extends State<ChatRoom> {
                 itemCount: snapshot.data.docs.length,
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
-                  print('lololol ${snapshot.data.docs[index].id}');
                   return ChatRoomsTile(
                     userObj: userObj, // get from chatrooms
                     chatRoomObj: snapshot.data.docs[index].data,
+                    chatRoomID: snapshot.data.docs[index].id,
                     isPM: snapshot.data.docs[index].data()['isPM'],
                   );
                 });
@@ -60,21 +60,6 @@ class _ChatRoomState extends State<ChatRoom> {
           print("noData");
           return Container();
         }
-        // return snapshot.hasData
-            // ? ListView.builder(
-            //     itemCount: snapshot.data.docs.length,
-            //     shrinkWrap: true,
-            //     itemBuilder: (context, index) {
-            //       print("powerrangers");
-            //       return ChatRoomsTile(
-            //         userName: snapshot.data.docs[index].data['chatRoomId']
-            //             .toString()
-            //             .replaceAll("_", "")
-            //             .replaceAll(Constants.myName, ""),
-            //         chatRoomId: snapshot.data.docs[index].data["chatRoomId"],
-            //       );
-            //     })
-            // : Container();
       },
     );
   }
@@ -124,7 +109,9 @@ class _ChatRoomState extends State<ChatRoom> {
         child: Icon(Icons.add),
         onPressed: () {
           Navigator.push(context,
-              MaterialPageRoute(builder: (context) => MainMenuSearch()));
+              MaterialPageRoute(builder: (context) => MainMenuSearch(
+                user: userObj,
+              )));
         },
       ),
     );
@@ -132,19 +119,27 @@ class _ChatRoomState extends State<ChatRoom> {
 }
 
 class ChatRoomsTile extends StatelessWidget {
-  ChatRoomsTile({@required this.userObj, @required this.chatRoomObj, this.isPM});
+  ChatRoomsTile({@required this.userObj, @required this.chatRoomObj, this.chatRoomID, this.isPM});
   final User userObj;
   final Object chatRoomObj;
+  final String chatRoomID;
   final bool isPM;
 
   @override
   Widget build(BuildContext context) {
     String displayname;
     if(isPM == true){
-      displayname = findPrivateChatPerson(context, chatRoomObj, userObj).name;
+      displayname = findPrivateChatPerson(context, chatRoomObj, userObj, chatRoomID).name;
+    } else if(isPM == false) {  // not group chat
+      // displayname = findGroupChatName(context, chatRoom); dynamic chat name? idk
+      displayname = findChatRoomName(context, chatRoomObj);
+    } else {
+      print("isPM null");
     }
+    print("displayname: "+displayname);
+
     return GestureDetector(
-      onTap: (){ isChatPM(context, isPM, chatRoomObj, userObj); },
+      onTap: (){ isChatPM(context, isPM, chatRoomObj, userObj, chatRoomID); },
       child: Container(
         color: Colors.black26,
         padding: EdgeInsets.symmetric(horizontal: 24, vertical: 20),
@@ -156,7 +151,6 @@ class ChatRoomsTile extends StatelessWidget {
               decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(30)),
-              // child: Text(userObj.name.substring(0, 1),
               child: Text(displayname.substring(0, 1),
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -181,37 +175,40 @@ class ChatRoomsTile extends StatelessWidget {
     );
   }
 
-  findPrivateChatPerson(context, chatRoomObj, userObj){
-    String chatUserID;
+  findChatRoomName(context, chatRoomObj){
+    return chatRoomObj()['name'];
+  }
+
+  findPrivateChatPerson(context, chatRoomObj, userObj, chatRoomID){
+    // String chatUserID;
     String chatUserName;
 
     if(chatRoomObj()["admins"][0]["name"] == userObj.name){
-      chatUserID = chatRoomObj()["non-admins"][0]["id"];
+      // chatUserID = chatRoomObj()["non-admins"][0]["id"];
       chatUserName = chatRoomObj()["non-admins"][0]["name"];
     } else {
-      chatUserID = chatRoomObj()['admins'][0]['id'];
+      // chatUserID = chatRoomObj()['admins'][0]['id'];
       chatUserName = chatRoomObj()['admins'][0]['name'];
     }
 
-    print(chatUserName);
-
-    return Private(id: chatUserID, name: chatUserName);
+    print("chatRoomID: "+chatRoomID+" chatUserName: "+chatUserName);
+    return Private(id: chatRoomID, name: chatUserName);
   }
 
-  isChatPM(context, isPM, chatRoomObj, userObj){
-    print("test");
+  isChatPM(context, isPM, chatRoomObj, userObj, chatRoomID){
+    print(chatRoomID);
     if(isPM == true){
       return Navigator.push(context, MaterialPageRoute(
         builder: (context) => PrivateChat(
           user: userObj,
-          chat: findPrivateChatPerson(context, chatRoomObj, userObj), // inefficient? store display name retval and call here
+          chat: findPrivateChatPerson(context, chatRoomObj, userObj, chatRoomID), // inefficient? store display name retval and call here
         )
       ));
     } else {
       return Navigator.push(context, MaterialPageRoute(
         builder: (context) => GroupChat(
           user: userObj,
-          chat: Group(id: chatRoomObj().id),
+          chat: Group(id: chatRoomID),
         )
       ));
     }

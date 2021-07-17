@@ -8,10 +8,8 @@ class MainMenuSearch extends StatefulWidget {
   User user;
 
   MainMenuSearch({this.user});
-  @override
   _MainMenuSearch createState() => _MainMenuSearch();
 }
-
 class _MainMenuSearch extends State<MainMenuSearch> {
   List<User> addedUsers = [];
   AddUserHandle SearchedUser({User newUser}) {
