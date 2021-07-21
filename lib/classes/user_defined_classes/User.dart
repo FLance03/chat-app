@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import '../classes.dart';
 
 class User {
-  String name, id;
+  String name, id, email;
 
-  User({this.id, this.name});
+  User({this.id, this.name, this.email});
 
   static Future<List<User>> findUser({String text='', int maxCount = -1}) {
     List<User> retVal = [];

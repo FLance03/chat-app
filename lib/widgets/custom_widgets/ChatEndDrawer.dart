@@ -14,8 +14,23 @@ class ChatEndDrawer extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
+          
           DrawerHeader(
-            child: Text('SpaceX'), // chat title
+            child: StreamBuilder(
+              stream: chat.getName(),
+              builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                if (snapshot.hasError) {
+                  return Text(snapshot.error.toString());
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Text("Loading Group Name...");
+                }
+                if (!snapshot.hasData){
+                  return Text("Loading Group Name...");
+                }
+                return Text(snapshot.data);
+              }
+            ), // chat title
           ),
           this.chat.StreamAdminDependency(
                 user: this.user,
@@ -145,6 +160,7 @@ class ChatEndDrawer extends StatelessWidget {
               return SizedBox();
             },
           ),
+          
           // [
           //   ListTile(
           //     title: Text('Member A'),

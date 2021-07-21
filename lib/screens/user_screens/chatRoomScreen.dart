@@ -16,7 +16,7 @@ class _ChatRoomState extends State<ChatRoom> {
   AuthMethods authMethods = new AuthMethods();
   DatabaseMethods databaseMethods = new DatabaseMethods();
   Stream mobileStreamChat;
-  User userObj;
+  User userObj = new User(id: '1', name: 'xxx', email: 'xxxx');
 
   @override
   void initState() {
@@ -27,8 +27,10 @@ class _ChatRoomState extends State<ChatRoom> {
   getUserInfo() async {
     Constants.myName = await HelperFuntions.getUserNameSharedPreference();
     databaseMethods.getUserbyUsername(Constants.myName).then((value){
+      String email = (value.docs[0].data()['email']!= null)? value.docs[0].data()['email'] : value.docs[0].data()['name'];
       userObj = new User(id: value.docs[0].id.toString(), 
-                        name: value.docs[0].data()["name"]);
+                        name: value.docs[0].data()["name"],
+                        email: email);
       databaseMethods.getChatRooms(userObj.id).then((value) {
         mobileStreamChat = value;
         print("getchatrooms");
@@ -67,7 +69,7 @@ class _ChatRoomState extends State<ChatRoom> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: drawer(context),
+      drawer: drawer(context, this.userObj),
       appBar: AppBar(
         title: Text(
           "Chat App",
@@ -133,10 +135,11 @@ class ChatRoomsTile extends StatelessWidget {
     } else if(isPM == false) {  // not group chat
       // displayname = findGroupChatName(context, chatRoom); dynamic chat name? idk
       displayname = findChatRoomName(context, chatRoomObj);
-    } else {
-      print("isPM null");
     }
-    print("displayname: "+displayname);
+    //  else {
+    //   print("isPM null");
+    // }
+    // print("displayname: "+displayname);
 
     return GestureDetector(
       onTap: (){ isChatPM(context, isPM, chatRoomObj, userObj, chatRoomID); },
@@ -216,7 +219,10 @@ class ChatRoomsTile extends StatelessWidget {
 }
 
 //drawer
-Widget drawer(BuildContext context) {
+Widget drawer(BuildContext context, User userObj) {
+  String displayEmail = userObj.email;
+  String displayName = userObj.name;
+
   return Drawer(
     child: ListView(
       padding: EdgeInsets.zero,
@@ -230,13 +236,13 @@ Widget drawer(BuildContext context) {
               child: UserAccountsDrawerHeader(
                 accountEmail: FittedBox(
                   child: Text(
-                    "student@gmail.com", // placeholder
+                    displayEmail,
                     style: TextStyle(fontSize: 16.0),
                   ),
                 ),
                 accountName: FittedBox(
                   child: Text(
-                    "student", // placeholder
+                    displayName,
                     style: TextStyle(
                       fontSize: 16.0,
                     ),

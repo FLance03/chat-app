@@ -74,7 +74,6 @@ class _PrivateChat extends State<PrivateChat> {
   // ]));
 
   Widget build(BuildContext context) {
-    print('sdadasdasd');
     print(this.widget.chat.id);
     // FirebaseFirestore.instance
     //   .collection('messages')
