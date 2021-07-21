@@ -25,8 +25,8 @@ class _ChatRoomState extends State<ChatRoom> {
   }
 
   getUserInfo() async {
-    Constants.myName = await HelperFuntions.getUserNameSharedPreference();
-    databaseMethods.getUserbyUsername(Constants.myName).then((value){
+    Constants.myName = await HelperFuntions.getUserEmailSharedPreference();
+    databaseMethods.getUserbyUserEmail(Constants.myName).then((value){
       String email = (value.docs[0].data()['email']!= null)? value.docs[0].data()['email'] : value.docs[0].data()['name'];
       userObj = new User(id: value.docs[0].id.toString(), 
                         name: value.docs[0].data()["name"],

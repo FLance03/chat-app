@@ -194,7 +194,7 @@ class _MainMenuSearch extends State<MainMenuSearch> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text(
-                                    user.titleCaseName(),
+                                    user.name,
                                     style: TextStyle(
                                       color: Colors.grey[600],
                                       fontSize: 18,
