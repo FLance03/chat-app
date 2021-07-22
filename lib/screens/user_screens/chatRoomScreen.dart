@@ -109,6 +109,7 @@ class _ChatRoomState extends State<ChatRoom> {
       body: chatRoomList(),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
+        tooltip: 'New Group Chat',
         onPressed: () {
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => MainMenuSearch(

@@ -81,7 +81,7 @@ class EmailValidator {
 
 class PasswordValidator {
   static String validate(String value) {
-    if (value.length < 4) {
+    if (value.length < 6) {
       return "Enter a Stronger Password";
     }
     return null;

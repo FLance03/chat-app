@@ -91,7 +91,6 @@ class _SignInState extends State<SignIn> {
                       ),
                       TextFormField(
                         obscureText: true,
-                        validator: PasswordValidator.validate,
                         controller: passwordTextEditingController,
                         decoration: textFieldInputDecoration("Password"),
                         style: simpleTextStyle(),

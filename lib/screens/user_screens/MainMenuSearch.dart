@@ -22,11 +22,11 @@ class _MainMenuSearch extends State<MainMenuSearch> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text('Create New Conversation'),
+        title: Text('Create Group Chat'),
       ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
-        tooltip: 'Create Conversation',
+        tooltip: 'Create Group',
         onPressed: () async {
           DocumentReference doc;
           Chat chat;
